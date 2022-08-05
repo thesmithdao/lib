@@ -1,3 +1,26 @@
+# [@shapeshiftoss/caip-v6.13.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.12.0...@shapeshiftoss/caip-v6.13.0) (2022-08-04)
+
+
+### Features
+
+* idle finance ([#947](https://github.com/shapeshift/lib/issues/947)) ([3223f07](https://github.com/shapeshift/lib/commit/3223f076258ae032e6b9e0facdc640297730eba2))
+
+# [@shapeshiftoss/caip-v6.12.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.11.1...@shapeshiftoss/caip-v6.12.0) (2022-08-03)
+
+
+### Features
+
+* detect completed txs and throw error on fail ([#939](https://github.com/shapeshift/lib/issues/939)) ([f85e1fb](https://github.com/shapeshift/lib/commit/f85e1fbbda37da37849a154693a64a5e6c4aa35f))
+
+# [@shapeshiftoss/caip-v6.11.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.11.0...@shapeshiftoss/caip-v6.11.1) (2022-08-03)
+
+# [@shapeshiftoss/caip-v6.11.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.10.0...@shapeshiftoss/caip-v6.11.0) (2022-08-02)
+
+
+### Features
+
+* add bitcoincash ([#932](https://github.com/shapeshift/lib/issues/932)) ([85080ed](https://github.com/shapeshift/lib/commit/85080ed065027d3e9fe6d28799a0c171ac7ea39c))
+
 # [@shapeshiftoss/caip-v6.10.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v6.9.1...@shapeshiftoss/caip-v6.10.0) (2022-08-02)
 
 
