@@ -2,7 +2,7 @@
 export enum Dex {
   Thor = 'THORChain',
   Zrx = '0x',
-  CowSwap = 'CowSwap'
+  CowSwap = 'CowSwap',
 }
 
 export interface Fee {
@@ -15,7 +15,7 @@ export enum TxStatus {
   Confirmed = 'Confirmed',
   Pending = 'Pending',
   Failed = 'Failed',
-  Unknown = 'Unknown'
+  Unknown = 'Unknown',
 }
 
 export interface Token {
@@ -34,7 +34,7 @@ export interface Trade {
 // these are user facing values, and should be rendered as such
 export enum TradeType {
   Trade = 'Trade',
-  Refund = 'Refund'
+  Refund = 'Refund',
 }
 
 export interface Transfer {
@@ -51,27 +51,12 @@ export interface Transfer {
 export enum TransferType {
   Send = 'Send',
   Receive = 'Receive',
-  Contract = 'Contract'
-}
-
-export enum TxParser {
-  Cosmos = 'cosmos',
-  Yearn = 'yearn',
-  UniV2 = 'uniV2',
-  ZRX = 'zrx',
-  Thor = 'thor',
-  Foxy = 'foxy',
-  WETH = 'weth',
-  CowSwap = 'cowswap'
+  Contract = 'Contract',
 }
 
 export interface BaseTxMetadata {
   method?: string
   parser: string
-}
-
-export interface StandardTxMetadata extends BaseTxMetadata {
-  parser: `${TxParser}`
 }
 
 export interface StandardTx {

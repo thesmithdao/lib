@@ -7,6 +7,7 @@ import Web3 from 'web3'
 import {
   ApprovalNeededInput,
   ApprovalNeededOutput,
+  ApproveAmountInput,
   ApproveInfiniteInput,
   BuildTradeInput,
   BuyAssetBySellIdInput,
@@ -16,10 +17,10 @@ import {
   SwapperType,
   TradeQuote,
   TradeResult,
-  TradeTxs
+  TradeTxs,
 } from '../../api'
 import { cowApprovalNeeded } from './cowApprovalNeeded/cowApprovalNeeded'
-import { cowApproveInfinite } from './cowApproveInfinite/cowApproveInfinite'
+import { cowApproveAmount, cowApproveInfinite } from './cowApprove/cowApprove'
 import { cowBuildTrade } from './cowBuildTrade/cowBuildTrade'
 import { cowExecuteTrade } from './cowExecuteTrade/cowExecuteTrade'
 import { cowGetTradeTxs } from './cowGetTradeTxs/cowGetTradeTxs'
@@ -51,7 +52,7 @@ export class CowSwapper implements Swapper<KnownChainIds.EthereumMainnet> {
   }
 
   async getTradeQuote(
-    input: GetTradeQuoteInput
+    input: GetTradeQuoteInput,
   ): Promise<TradeQuote<KnownChainIds.EthereumMainnet>> {
     return getCowSwapTradeQuote(this.deps, input)
   }
@@ -65,15 +66,19 @@ export class CowSwapper implements Swapper<KnownChainIds.EthereumMainnet> {
   }
 
   async approvalNeeded(
-    args: ApprovalNeededInput<KnownChainIds.EthereumMainnet>
+    args: ApprovalNeededInput<KnownChainIds.EthereumMainnet>,
   ): Promise<ApprovalNeededOutput> {
     return cowApprovalNeeded(this.deps, args)
   }
 
   async approveInfinite(
-    args: ApproveInfiniteInput<KnownChainIds.EthereumMainnet>
+    args: ApproveInfiniteInput<KnownChainIds.EthereumMainnet>,
   ): Promise<string> {
     return cowApproveInfinite(this.deps, args)
+  }
+
+  async approveAmount(args: ApproveAmountInput<KnownChainIds.EthereumMainnet>): Promise<string> {
+    return cowApproveAmount(this.deps, args)
   }
 
   filterBuyAssetsBySellAssetId(args: BuyAssetBySellIdInput): AssetId[] {
@@ -88,13 +93,14 @@ export class CowSwapper implements Swapper<KnownChainIds.EthereumMainnet> {
       (id) =>
         id !== sellAssetId &&
         fromAssetId(id).chainId === KnownChainIds.EthereumMainnet &&
-        !COWSWAP_UNSUPPORTED_ASSETS.includes(id)
+        !COWSWAP_UNSUPPORTED_ASSETS.includes(id),
     )
   }
 
   filterAssetIdsBySellable(assetIds: AssetId[]): AssetId[] {
     return assetIds.filter(
-      (id) => fromAssetId(id).assetNamespace === 'erc20' && !COWSWAP_UNSUPPORTED_ASSETS.includes(id)
+      (id) =>
+        fromAssetId(id).assetNamespace === 'erc20' && !COWSWAP_UNSUPPORTED_ASSETS.includes(id),
     )
   }
 

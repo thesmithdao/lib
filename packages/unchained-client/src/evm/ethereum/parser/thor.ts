@@ -2,18 +2,16 @@ import { ChainId } from '@shapeshiftoss/caip'
 import { ethers } from 'ethers'
 
 import { Tx } from '../../../generated/ethereum'
-import { Dex, TradeType } from '../../../types'
-import {
-  getSigHash,
-  SubParser,
-  txInteractsWithContract,
-  TxMetadata,
-  TxSpecific
-} from '../../parser'
+import { BaseTxMetadata, Dex, TradeType } from '../../../types'
+import { getSigHash, SubParser, txInteractsWithContract, TxSpecific } from '../../parser'
 import THOR_ABI from './abi/thor'
 import { THOR_ROUTER_CONTRACT_MAINNET, THOR_ROUTER_CONTRACT_ROPSTEN } from './constants'
 
 const SWAP_TYPES = ['SWAP', '=', 's']
+
+export interface TxMetadata extends BaseTxMetadata {
+  parser: 'thor'
+}
 
 export interface ParserArgs {
   chainId: ChainId
@@ -26,7 +24,7 @@ export class Parser implements SubParser<Tx> {
 
   readonly supportedFunctions = {
     depositSigHash: this.abiInterface.getSighash('deposit'),
-    transferOutSigHash: this.abiInterface.getSighash('transferOut')
+    transferOutSigHash: this.abiInterface.getSighash('transferOut'),
   }
 
   constructor(args: ParserArgs) {
@@ -59,7 +57,7 @@ export class Parser implements SubParser<Tx> {
 
     const data: TxMetadata = {
       method: decoded.name,
-      parser: 'thor'
+      parser: 'thor',
     }
 
     const [type] = decoded.args.memo.split(':')

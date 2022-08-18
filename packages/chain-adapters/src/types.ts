@@ -4,7 +4,7 @@ import {
   CosmosSignTx,
   ETHSignTx,
   HDWallet,
-  OsmosisSignTx
+  OsmosisSignTx,
 } from '@shapeshiftoss/hdwallet-core'
 import { BIP44Params, ChainSpecific, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
@@ -44,7 +44,7 @@ export type AssetBalance = {
 export enum FeeDataKey {
   Slow = 'slow',
   Average = 'average',
-  Fast = 'fast'
+  Fast = 'fast',
 }
 
 type ChainSpecificFeeData<T> = ChainSpecific<
@@ -88,17 +88,12 @@ export type SubscribeTxsInput = {
 export type TransferType = unchained.TransferType
 export type TradeType = unchained.TradeType
 
-type TransactionData =
-  | unchained.StandardTxMetadata
-  | unchained.evm.TxMetadata
-  | unchained.cosmos.TxMetadata
+export type TxMetadata = unchained.evm.TxMetadata | unchained.cosmos.TxMetadata
 
 export type Transaction = Omit<unchained.StandardTx, 'transfers'> & {
   transfers: Array<TxTransfer>
-  data?: TransactionData
+  data?: TxMetadata
 }
-
-export type TransactionMetadata = unchained.StandardTxMetadata
 
 export type TxTransfer = Omit<unchained.Transfer, 'components' | 'totalValue' | 'token'> & {
   value: string
@@ -228,7 +223,7 @@ export type GetFeeDataInput<T extends ChainId> = {
 
 export enum ValidAddressResultType {
   Valid = 'valid',
-  Invalid = 'invalid'
+  Invalid = 'invalid',
 }
 
 export type ValidAddressResult = {

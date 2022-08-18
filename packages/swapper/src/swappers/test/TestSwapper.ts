@@ -4,12 +4,14 @@ import { AssetId, ChainId } from '@shapeshiftoss/caip'
 import {
   ApprovalNeededOutput,
   BuyAssetBySellIdInput,
+  SwapError,
+  SwapErrorTypes,
   Swapper,
   SwapperType,
   Trade,
   TradeQuote,
   TradeResult,
-  TradeTxs
+  TradeTxs,
 } from '../../api'
 
 /**
@@ -32,7 +34,7 @@ export class TestSwapper implements Swapper<ChainId> {
     this.supportAssets = [
       'bip122:000000000019d6689c085ae165831e93/slip44:0',
       'cosmos:cosmoshub-4/slip44:118',
-      'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d'
+      'eip155:1/erc20:0xc770eefad204b5180df6a14ee197d99d808ee52d',
     ]
   }
 
@@ -47,6 +49,12 @@ export class TestSwapper implements Swapper<ChainId> {
 
   async approveInfinite(): Promise<string> {
     throw new Error('TestSwapper: approveInfinite unimplemented')
+  }
+
+  async approveAmount(): Promise<string> {
+    throw new SwapError('TestSwapper: approveAmount unimplemented', {
+      code: SwapErrorTypes.RESPONSE_ERROR,
+    })
   }
 
   filterBuyAssetsBySellAssetId(args: BuyAssetBySellIdInput): AssetId[] {
