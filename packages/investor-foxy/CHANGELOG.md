@@ -1,3 +1,26 @@
+# [@shapeshiftoss/investor-foxy-v6.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v6.0.0...@shapeshiftoss/investor-foxy-v6.1.0) (2022-09-12)
+
+
+### Features
+
+* add THORChain support ([#1010](https://github.com/shapeshift/lib/issues/1010)) ([d7c3b72](https://github.com/shapeshift/lib/commit/d7c3b72bbda9795f87fa8f73c35926c95026a3c2))
+
+# [@shapeshiftoss/investor-foxy-v6.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v5.0.1...@shapeshiftoss/investor-foxy-v6.0.0) (2022-09-08)
+
+
+### Features
+
+* **investor-foxy:** accept bip44Params ([#1016](https://github.com/shapeshift/lib/issues/1016)) ([5523da6](https://github.com/shapeshift/lib/commit/5523da623bdd8655976cf3c7e2884460ff02aa6f))
+
+
+### BREAKING CHANGES
+
+* **investor-foxy:** investor-foxy now expects full `bip44Params` params in tx input methods instead of `accountNumber`
+
+* chore: trigger CI
+
+* chore: trigger CI
+
 # [@shapeshiftoss/investor-foxy-v5.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v5.0.0...@shapeshiftoss/investor-foxy-v5.0.1) (2022-09-02)
 
 # [@shapeshiftoss/investor-foxy-v5.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v4.1.1...@shapeshiftoss/investor-foxy-v5.0.0) (2022-09-02)
