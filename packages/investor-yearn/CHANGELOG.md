@@ -1,3 +1,19 @@
+# [@shapeshiftoss/investor-yearn-v6.4.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v6.4.0...@shapeshiftoss/investor-yearn-v6.4.1) (2023-02-11)
+
+# [@shapeshiftoss/investor-yearn-v6.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v6.3.0...@shapeshiftoss/investor-yearn-v6.4.0) (2023-01-13)
+
+
+### Features
+
+* add optimism ([#1157](https://github.com/shapeshift/lib/issues/1157)) ([177725d](https://github.com/shapeshift/lib/commit/177725dc04c00ba982bbebe8e84a7edcff395367))
+
+# [@shapeshiftoss/investor-yearn-v6.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v6.2.0...@shapeshiftoss/investor-yearn-v6.3.0) (2023-01-04)
+
+
+### Features
+
+* **investor-yearn:** set retired vaults as expired ([#1145](https://github.com/shapeshift/lib/issues/1145)) ([9458abf](https://github.com/shapeshift/lib/commit/9458abfa45a2fda81fbbaffcebcdf389f272372d))
+
 # [@shapeshiftoss/investor-yearn-v6.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-yearn-v6.1.7...@shapeshiftoss/investor-yearn-v6.2.0) (2022-11-30)
 
 

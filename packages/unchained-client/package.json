@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/unchained-client",
-  "version": "10.8.0",
+  "version": "10.12.1",
   "license": "MIT",
   "main": "dist/index.js",
   "source": "src/index.ts",
@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@yfi/sdk": "^1.2.0",
+    "axios": "^0.26.1",
     "bignumber.js": "^9.0.2",
     "ethers": "^5.5.3",
     "isomorphic-ws": "^4.0.1",
@@ -30,7 +31,7 @@
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "^2.5.1",
     "@shapeshiftoss/caip": "^8.0.0",
-    "@shapeshiftoss/common-api": "^8.0.0",
+    "@shapeshiftoss/common-api": "^8.1.0",
     "@shapeshiftoss/logger": "^1.1.2",
     "@shapeshiftoss/types": "^8.1.0",
     "@types/ws": "^8.2.1"

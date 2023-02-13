@@ -1,18 +1,13 @@
 import { fromAssetId } from '@shapeshiftoss/caip'
 
-import {
-  ApprovalNeededInput,
-  ApprovalNeededOutput,
-  EvmSupportedChainIds,
-  SwapError,
-  SwapErrorTypes,
-} from '../../../api'
+import { ApprovalNeededInput, ApprovalNeededOutput, SwapError, SwapErrorType } from '../../../api'
 import { erc20AllowanceAbi } from '../../utils/abi/erc20Allowance-abi'
 import { bnOrZero } from '../../utils/bignumber'
 import { getERC20Allowance } from '../../utils/helpers/helpers'
 import { ZrxSwapperDeps } from '../types'
+import { ZrxSupportedChainId } from '../ZrxSwapper'
 
-export async function zrxApprovalNeeded<T extends EvmSupportedChainIds>(
+export async function zrxApprovalNeeded<T extends ZrxSupportedChainId>(
   { adapter, web3 }: ZrxSwapperDeps,
   { quote, wallet }: ApprovalNeededInput<T>,
 ): Promise<ApprovalNeededOutput> {
@@ -23,7 +18,7 @@ export async function zrxApprovalNeeded<T extends EvmSupportedChainIds>(
   try {
     if (sellAsset.chainId !== adapter.getChainId()) {
       throw new SwapError('[zrxApprovalNeeded] - sellAsset chainId is not supported', {
-        code: SwapErrorTypes.UNSUPPORTED_CHAIN,
+        code: SwapErrorType.UNSUPPORTED_CHAIN,
         details: { chainId: sellAsset.chainId },
       })
     }
@@ -33,11 +28,13 @@ export async function zrxApprovalNeeded<T extends EvmSupportedChainIds>(
       return { approvalNeeded: false }
     }
 
-    const receiveAddress = await adapter.getAddress({ wallet, bip44Params: quote.bip44Params })
+    const { accountNumber } = quote
+
+    const receiveAddress = await adapter.getAddress({ accountNumber, wallet })
 
     if (!quote.allowanceContract) {
       throw new SwapError('[zrxApprovalNeeded] - allowanceTarget is required', {
-        code: SwapErrorTypes.VALIDATION_FAILED,
+        code: SwapErrorType.VALIDATION_FAILED,
         details: { chainId: sellAsset.chainId },
       })
     }
@@ -53,7 +50,7 @@ export async function zrxApprovalNeeded<T extends EvmSupportedChainIds>(
 
     if (!quote.feeData.chainSpecific?.gasPriceCryptoBaseUnit)
       throw new SwapError('[zrxApprovalNeeded] - no gas price with quote', {
-        code: SwapErrorTypes.RESPONSE_ERROR,
+        code: SwapErrorType.RESPONSE_ERROR,
         details: { feeData: quote.feeData },
       })
     return {
@@ -63,7 +60,7 @@ export async function zrxApprovalNeeded<T extends EvmSupportedChainIds>(
     if (e instanceof SwapError) throw e
     throw new SwapError('[zrxApprovalNeeded]', {
       cause: e,
-      code: SwapErrorTypes.CHECK_APPROVAL_FAILED,
+      code: SwapErrorType.CHECK_APPROVAL_FAILED,
     })
   }
 }

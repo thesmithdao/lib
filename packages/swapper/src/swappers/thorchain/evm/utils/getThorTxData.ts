@@ -1,11 +1,11 @@
 import { Asset } from '@shapeshiftoss/asset-service'
 import { fromAssetId } from '@shapeshiftoss/caip'
 
-import { SwapError, SwapErrorTypes } from '../../../../../api'
-import type { ThorchainSwapperDeps } from '../../../types'
-import { getInboundAddressDataForChain } from '../../getInboundAddressDataForChain'
-import { getLimit } from '../../getLimit/getLimit'
-import { makeSwapMemo } from '../../makeSwapMemo/makeSwapMemo'
+import { SwapError, SwapErrorType } from '../../../../api'
+import type { ThorchainSwapperDeps } from '../../types'
+import { getInboundAddressDataForChain } from '../../utils/getInboundAddressDataForChain'
+import { getLimit } from '../../utils/getLimit/getLimit'
+import { makeSwapMemo } from '../../utils/makeSwapMemo/makeSwapMemo'
 import { deposit } from '../routerCalldata'
 
 type GetBtcThorTxInfoArgs = {
@@ -42,7 +42,7 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
     const vault = inboundAddress?.address
     if (!inboundAddress || !router || !vault)
       throw new SwapError(`[getPriceRatio]: inboundAddress not found for ETH`, {
-        code: SwapErrorTypes.RESPONSE_ERROR,
+        code: SwapErrorType.RESPONSE_ERROR,
         details: { inboundAddress },
       })
 
@@ -71,6 +71,6 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
     return { data, router }
   } catch (e) {
     if (e instanceof SwapError) throw e
-    throw new SwapError('[getThorTxInfo]', { cause: e, code: SwapErrorTypes.TRADE_QUOTE_FAILED })
+    throw new SwapError('[getThorTxInfo]', { cause: e, code: SwapErrorType.TRADE_QUOTE_FAILED })
   }
 }

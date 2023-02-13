@@ -1,3 +1,171 @@
+# [@shapeshiftoss/swapper-v17.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v17.0.0...@shapeshiftoss/swapper-v17.0.1) (2023-02-11)
+
+# [@shapeshiftoss/swapper-v17.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v16.0.2...@shapeshiftoss/swapper-v17.0.0) (2023-02-08)
+
+
+### Features
+
+* improve swapper types ([#1181](https://github.com/shapeshift/lib/issues/1181)) ([5f455d2](https://github.com/shapeshift/lib/commit/5f455d2883c0efd6f423588f81b86189d07ad5e4))
+
+
+### BREAKING CHANGES
+
+* explicit supported chain ids by swapper
+
+# [@shapeshiftoss/swapper-v16.0.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v16.0.1...@shapeshiftoss/swapper-v16.0.2) (2023-02-04)
+
+# [@shapeshiftoss/swapper-v16.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v16.0.0...@shapeshiftoss/swapper-v16.0.1) (2023-01-31)
+
+
+### Bug Fixes
+
+* use correct sell amount for approve infinite ([#1184](https://github.com/shapeshift/lib/issues/1184)) ([5e5c6a1](https://github.com/shapeshift/lib/commit/5e5c6a1c0ccd6fab15fc7c516c8847f356c661ce))
+
+# [@shapeshiftoss/swapper-v16.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.8.0...@shapeshiftoss/swapper-v16.0.0) (2023-01-30)
+
+
+### Features
+
+* **swapper:** add getSwappersWithQuoteMetadata method ([#1182](https://github.com/shapeshift/lib/issues/1182)) ([ee35823](https://github.com/shapeshift/lib/commit/ee358230a62b75788d3ff24f1923c511f166b708))
+
+
+### BREAKING CHANGES
+
+* **swapper:** removes getBestSwapper method
+BREAKING CHANGES: removes getBestSwapperMethod
+
+# [@shapeshiftoss/swapper-v15.8.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.7.0...@shapeshiftoss/swapper-v15.8.0) (2023-01-26)
+
+
+### Features
+
+* add optimism support on zrx ([#1178](https://github.com/shapeshift/lib/issues/1178)) ([5de1305](https://github.com/shapeshift/lib/commit/5de1305fd9c4ba080115002d486f3aa374aed0de))
+
+# [@shapeshiftoss/swapper-v15.7.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.6.0...@shapeshiftoss/swapper-v15.7.0) (2023-01-23)
+
+
+### Features
+
+* **swapper:** return maybe halted data from getThorTxInfo ([#1175](https://github.com/shapeshift/lib/issues/1175)) ([10b98c4](https://github.com/shapeshift/lib/commit/10b98c46ef67e813bbf0cd5b82ef6da65379d0d6))
+
+# [@shapeshiftoss/swapper-v15.6.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.5.2...@shapeshiftoss/swapper-v15.6.0) (2023-01-20)
+
+
+### Features
+
+* optimism l1 fees ([#1170](https://github.com/shapeshift/lib/issues/1170)) ([7105f94](https://github.com/shapeshift/lib/commit/7105f94cd58483b91041b8a0d5b2841fe1a37a98))
+
+# [@shapeshiftoss/swapper-v15.5.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.5.1...@shapeshiftoss/swapper-v15.5.2) (2023-01-19)
+
+
+### Bug Fixes
+
+* **asset-service:** update viewblock url ([#1169](https://github.com/shapeshift/lib/issues/1169)) ([f93c918](https://github.com/shapeshift/lib/commit/f93c918f8fdc77243279aae6b47431588ecafcfe))
+
+# [@shapeshiftoss/swapper-v15.5.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.5.0...@shapeshiftoss/swapper-v15.5.1) (2023-01-15)
+
+
+### Bug Fixes
+
+* **swapper:** osmo swapper cached url, small refactor ([#1165](https://github.com/shapeshift/lib/issues/1165)) ([8862158](https://github.com/shapeshift/lib/commit/8862158c4115d4e7129e2389c5a48ab07be8d0cd))
+
+# [@shapeshiftoss/swapper-v15.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.4.1...@shapeshiftoss/swapper-v15.5.0) (2023-01-13)
+
+
+### Features
+
+* add optimism ([#1157](https://github.com/shapeshift/lib/issues/1157)) ([177725d](https://github.com/shapeshift/lib/commit/177725dc04c00ba982bbebe8e84a7edcff395367))
+
+# [@shapeshiftoss/swapper-v15.4.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.4.0...@shapeshiftoss/swapper-v15.4.1) (2023-01-12)
+
+
+### Bug Fixes
+
+* changing pagination to 10 broke things. changes it back to 1000 ([#1164](https://github.com/shapeshift/lib/issues/1164)) ([67f860c](https://github.com/shapeshift/lib/commit/67f860c4160f634116d2eebef901a94141ab92d0))
+
+# [@shapeshiftoss/swapper-v15.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.3.3...@shapeshiftoss/swapper-v15.4.0) (2023-01-12)
+
+
+### Features
+
+* **swapper:** add multi-account support to CoW Swap ([#1162](https://github.com/shapeshift/lib/issues/1162)) ([c6d396e](https://github.com/shapeshift/lib/commit/c6d396e816d90b314dc03594eb7acda6b47f32b2))
+
+# [@shapeshiftoss/swapper-v15.3.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.3.2...@shapeshiftoss/swapper-v15.3.3) (2023-01-11)
+
+
+### Bug Fixes
+
+* **swapper:** cache osmo pools endpoint ([#1161](https://github.com/shapeshift/lib/issues/1161)) ([3e150ee](https://github.com/shapeshift/lib/commit/3e150ee91b4cc44f618bd34725f778b9dc5fd0a3))
+
+# [@shapeshiftoss/swapper-v15.3.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.3.1...@shapeshiftoss/swapper-v15.3.2) (2023-01-11)
+
+
+### Bug Fixes
+
+* cosmos account number ([#1160](https://github.com/shapeshift/lib/issues/1160)) ([d76ceaa](https://github.com/shapeshift/lib/commit/d76ceaab080cd5194f7220e6ae66bc8eceb3bf92))
+
+# [@shapeshiftoss/swapper-v15.3.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.3.0...@shapeshiftoss/swapper-v15.3.1) (2023-01-11)
+
+
+### Bug Fixes
+
+* use cosmos sdk account number in osmo buildTradeTx ([#1159](https://github.com/shapeshift/lib/issues/1159)) ([4992b0f](https://github.com/shapeshift/lib/commit/4992b0ff1c72fad44156faf8b27924809ad679bc))
+
+# [@shapeshiftoss/swapper-v15.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.2.2...@shapeshiftoss/swapper-v15.3.0) (2023-01-10)
+
+
+### Features
+
+* **swapper:** export `getInboundAddressDataForChain` ([#1158](https://github.com/shapeshift/lib/issues/1158)) ([8cc30f8](https://github.com/shapeshift/lib/commit/8cc30f8d3727a1f84f09b721ee5511fcb65c7414))
+
+# [@shapeshiftoss/swapper-v15.2.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.2.1...@shapeshiftoss/swapper-v15.2.2) (2023-01-09)
+
+
+### chore
+
+* use singular naming convention for SwapErrorType ([#1156](https://github.com/shapeshift/lib/issues/1156)) ([0485c7f](https://github.com/shapeshift/lib/commit/0485c7fd94212588a795e5191ffda31a198292b2))
+
+
+### BREAKING CHANGES
+
+* web consumption needs to be updated
+BREAKING CHANGES: web consumption needs to be updated
+
+# [@shapeshiftoss/swapper-v15.2.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.2.0...@shapeshiftoss/swapper-v15.2.1) (2023-01-06)
+
+
+### Bug Fixes
+
+* **swapper:** make osmosis swapper account-aware ([#1150](https://github.com/shapeshift/lib/issues/1150)) ([6a0c010](https://github.com/shapeshift/lib/commit/6a0c010a5d54ebe96ebe622b67fba21c0a5d3922))
+
+# [@shapeshiftoss/swapper-v15.2.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.1.0...@shapeshiftoss/swapper-v15.2.0) (2023-01-06)
+
+
+### Features
+
+* **swapper:** implement getBestSwapper logic ([#1123](https://github.com/shapeshift/lib/issues/1123)) ([d0ef885](https://github.com/shapeshift/lib/commit/d0ef8856addaabbfcd451b371e7174844c278e17))
+
+# [@shapeshiftoss/swapper-v15.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.0.4...@shapeshiftoss/swapper-v15.1.0) (2023-01-05)
+
+
+### Features
+
+* **swapper:** update ThornodePoolResponse to the latest /lcd/thorchain/pools schema ([#1152](https://github.com/shapeshift/lib/issues/1152)) ([500af15](https://github.com/shapeshift/lib/commit/500af150287f820b8719bd67c16b75e707e184b2))
+
+# [@shapeshiftoss/swapper-v15.0.4](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.0.3...@shapeshiftoss/swapper-v15.0.4) (2023-01-05)
+
+
+### Bug Fixes
+
+* only inject accountNumber, not full bip44params ([#1147](https://github.com/shapeshift/lib/issues/1147)) ([7e53b6d](https://github.com/shapeshift/lib/commit/7e53b6d517d069d8a1831e4b474405b4e9220dcf))
+
+# [@shapeshiftoss/swapper-v15.0.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.0.2...@shapeshiftoss/swapper-v15.0.3) (2023-01-05)
+
+
+### Performance Improvements
+
+* **swapper:** add caching to swapper requests ([#1151](https://github.com/shapeshift/lib/issues/1151)) ([76c6f84](https://github.com/shapeshift/lib/commit/76c6f84f496931aad3c58b8f4088f84287e426ed))
+
 # [@shapeshiftoss/swapper-v15.0.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/swapper-v15.0.1...@shapeshiftoss/swapper-v15.0.2) (2022-12-23)
 
 

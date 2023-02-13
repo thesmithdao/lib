@@ -1,12 +1,15 @@
+import axios from 'axios'
+
 import { Dex, Trade, TradeType, TransferType, TxStatus } from '../../../../types'
-import { ParsedTx as Tx } from '../../../parser'
+import { ParsedTx } from '../../../parser'
 import {
   FOXY_STAKING_CONTRACT,
   SHAPE_SHIFT_ROUTER_CONTRACT,
   UNI_V2_FOX_STAKING_REWARDS_V3,
   WETH_CONTRACT_MAINNET,
 } from '../constants'
-import { TransactionParser } from '../index'
+import { TransactionParser, ZRX_ETHEREUM_PROXY_CONTRACT } from '../index'
+import { YEARN_VAULTS_URL } from '../yearn'
 import ethSelfSend from './mockData/ethSelfSend'
 import foxClaim from './mockData/foxClaim'
 import foxExit from './mockData/foxExit'
@@ -51,16 +54,23 @@ import zrxTradeEthToMatic from './mockData/zrxTradeEthToMatic'
 import zrxTradeTetherToKishu from './mockData/zrxTradeTetherToKishu'
 import zrxTradeTribeToEth from './mockData/zrxTradeTribeToEth'
 
-jest.mock('@yfi/sdk', () => ({
-  Yearn: jest.fn().mockImplementation(() => ({
-    vaults: {
-      get: () => [
-        { address: '0x671a912C10bba0CFA74Cfc2d6Fba9BA1ed9530B2' },
-        { address: '0x5f18C75AbDAe578b483E5F43f12a39cF75b973a9' },
-      ],
-    },
-  })),
-}))
+jest.mock('axios')
+
+const mockedAxios = axios as jest.Mocked<typeof axios>
+
+mockedAxios.get.mockImplementation((url) => {
+  switch (url) {
+    case YEARN_VAULTS_URL:
+      return Promise.resolve({
+        data: [
+          { address: '0x671a912C10bba0CFA74Cfc2d6Fba9BA1ed9530B2' },
+          { address: '0x5f18C75AbDAe578b483E5F43f12a39cF75b973a9' },
+        ],
+      })
+    default:
+      return Promise.resolve({ data: undefined })
+  }
+})
 
 const txParser = new TransactionParser({ rpcUrl: '', chainId: 'eip155:1' })
 
@@ -80,7 +90,7 @@ describe('parseTx', () => {
         type: TransferType.Receive,
       }
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: tx.txid,
         blockHeight: tx.blockHeight,
         blockTime: tx.timestamp,
@@ -117,7 +127,7 @@ describe('parseTx', () => {
         type: TransferType.Send,
       }
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: tx.txid,
         blockHeight: tx.blockHeight,
         blockTime: tx.timestamp,
@@ -161,7 +171,7 @@ describe('parseTx', () => {
         type: TransferType.Send,
       }
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: tx.txid,
         blockHeight: tx.blockHeight,
         blockTime: tx.timestamp,
@@ -205,7 +215,7 @@ describe('parseTx', () => {
         type: TransferType.Receive,
       }
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: tx.txid,
         blockHeight: tx.blockHeight,
         blockTime: tx.timestamp,
@@ -245,7 +255,7 @@ describe('parseTx', () => {
         type: TransferType.Receive,
       }
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: tx.txid,
         blockHeight: tx.blockHeight,
         blockTime: tx.timestamp,
@@ -285,7 +295,7 @@ describe('parseTx', () => {
         type: TransferType.Receive,
       }
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: tx.txid,
         blockHeight: tx.blockHeight,
         blockTime: tx.timestamp,
@@ -312,39 +322,28 @@ describe('parseTx', () => {
     it('should be able to parse token -> eth', async () => {
       const { tx } = zrxTradeTribeToEth
       const address = '0x5bb96c35a68Cba037D0F261C67477416db137F03'
-      const trade: Trade = {
-        dexName: Dex.Zrx,
-        type: TradeType.Trade,
-      }
+      const trade: Trade = { dexName: Dex.Zrx, type: TradeType.Trade }
+
       const buyTransfer = {
         assetId: 'eip155:1/slip44:60',
-        components: [
-          {
-            value: '541566754246167133',
-          },
-        ],
-        from: '0xDef1C0ded9bec7F1a1670819833240f027b25EfF',
-        to: '0x5bb96c35a68Cba037D0F261C67477416db137F03',
-        token: undefined,
+        components: [{ value: '541566754246167133' }],
+        from: ZRX_ETHEREUM_PROXY_CONTRACT,
+        to: address,
         totalValue: '541566754246167133',
         type: TransferType.Receive,
       }
 
       const sellTransfer = {
         assetId: 'eip155:1/erc20:0xc7283b66eb1eb5fb86327f08e1b5816b0720212b',
-        components: [
-          {
-            value: '1000000000000000000000',
-          },
-        ],
-        from: '0x5bb96c35a68Cba037D0F261C67477416db137F03',
+        components: [{ value: '1000000000000000000000' }],
+        from: address,
         to: '0x7ce01885a13c652241aE02Ea7369Ee8D466802EB',
         token: tribeToken,
         totalValue: '1000000000000000000000',
         type: TransferType.Send,
       }
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: tx.txid,
         blockHeight: tx.blockHeight,
         blockTime: tx.timestamp,
@@ -352,10 +351,7 @@ describe('parseTx', () => {
         address,
         chainId: 'eip155:1',
         confirmations: tx.confirmations,
-        data: {
-          method: undefined,
-          parser: 'zrx',
-        },
+        data: { parser: 'zrx' },
         status: TxStatus.Confirmed,
         fee: {
           value: '8308480000000000',
@@ -373,20 +369,13 @@ describe('parseTx', () => {
     it('should be able to parse eth -> token', async () => {
       const { tx } = zrxTradeEthToMatic
       const address = '0x564BcA365D62BCC22dB53d032F8dbD35439C9206'
-      const trade: Trade = {
-        dexName: Dex.Zrx,
-        type: TradeType.Trade,
-      }
+      const trade: Trade = { dexName: Dex.Zrx, type: TradeType.Trade }
 
       const buyTransfer = {
         assetId: 'eip155:1/erc20:0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0',
-        components: [
-          {
-            value: '50000000000000000000000',
-          },
-        ],
+        components: [{ value: '50000000000000000000000' }],
         from: '0x22F9dCF4647084d6C31b2765F6910cd85C178C18',
-        to: '0x564BcA365D62BCC22dB53d032F8dbD35439C9206',
+        to: address,
         token: maticToken,
         totalValue: '50000000000000000000000',
         type: TransferType.Receive,
@@ -394,19 +383,14 @@ describe('parseTx', () => {
 
       const sellTransfer = {
         assetId: 'eip155:1/slip44:60',
-        components: [
-          {
-            value: '10000000000000000000',
-          },
-        ],
-        from: '0x564BcA365D62BCC22dB53d032F8dbD35439C9206',
-        to: '0xDef1C0ded9bec7F1a1670819833240f027b25EfF',
-        token: undefined,
+        components: [{ value: '10000000000000000000' }],
+        from: address,
+        to: ZRX_ETHEREUM_PROXY_CONTRACT,
         totalValue: '10000000000000000000',
         type: TransferType.Send,
       }
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: tx.txid,
         blockHeight: tx.blockHeight,
         blockTime: tx.timestamp,
@@ -414,10 +398,7 @@ describe('parseTx', () => {
         address,
         chainId: 'eip155:1',
         confirmations: tx.confirmations,
-        data: {
-          method: undefined,
-          parser: 'zrx',
-        },
+        data: { parser: 'zrx' },
         status: TxStatus.Confirmed,
         fee: {
           value: '19815285000000000',
@@ -435,15 +416,12 @@ describe('parseTx', () => {
     it('should be able to parse token -> token', async () => {
       const { tx } = zrxTradeTetherToKishu
       const address = '0xb8b19c048296E086DaF69F54d48dE2Da444dB047'
-      const trade: Trade = {
-        dexName: Dex.Zrx,
-        type: TradeType.Trade,
-      }
+      const trade: Trade = { dexName: Dex.Zrx, type: TradeType.Trade }
 
       const buyTransfer = {
         type: TransferType.Receive,
         from: '0xF82d8Ec196Fb0D56c6B82a8B1870F09502A49F88',
-        to: '0xb8b19c048296E086DaF69F54d48dE2Da444dB047',
+        to: address,
         assetId: 'eip155:1/erc20:0xa2b4c0af19cc16a6cfacce81f192b024d625817d',
         totalValue: '9248567698016204727450',
         components: [{ value: '9248567698016204727450' }],
@@ -452,7 +430,7 @@ describe('parseTx', () => {
 
       const sellTransfer = {
         type: TransferType.Send,
-        from: '0xb8b19c048296E086DaF69F54d48dE2Da444dB047',
+        from: address,
         to: '0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852',
         assetId: 'eip155:1/erc20:0xdac17f958d2ee523a2206206994597c13d831ec7',
         totalValue: '45000000000',
@@ -460,7 +438,7 @@ describe('parseTx', () => {
         token: usdtToken,
       }
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: tx.txid,
         blockHeight: tx.blockHeight,
         blockTime: tx.timestamp,
@@ -468,10 +446,7 @@ describe('parseTx', () => {
         address,
         chainId: 'eip155:1',
         confirmations: tx.confirmations,
-        data: {
-          method: undefined,
-          parser: 'zrx',
-        },
+        data: { parser: 'zrx' },
         status: TxStatus.Confirmed,
         fee: {
           value: '78183644000000000',
@@ -534,7 +509,7 @@ describe('parseTx', () => {
         token: bondToken,
       }
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: tx.txid,
         blockHeight: tx.blockHeight,
         blockTime: tx.timestamp,
@@ -566,7 +541,7 @@ describe('parseTx', () => {
       const { txMempool } = ethSelfSend
       const address = '0x6bF198c2B5c8E48Af4e876bc2173175b89b1DA0C'
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: txMempool.txid,
         blockHeight: txMempool.blockHeight,
         blockTime: txMempool.timestamp,
@@ -604,7 +579,7 @@ describe('parseTx', () => {
       const { tx } = ethSelfSend
       const address = '0x6bF198c2B5c8E48Af4e876bc2173175b89b1DA0C'
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: tx.txid,
         blockHash: tx.blockHash,
         blockHeight: tx.blockHeight,
@@ -647,7 +622,7 @@ describe('parseTx', () => {
       const { txMempool } = tokenSelfSend
       const address = '0x6bF198c2B5c8E48Af4e876bc2173175b89b1DA0C'
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: txMempool.txid,
         blockHeight: txMempool.blockHeight,
         blockTime: txMempool.timestamp,
@@ -687,7 +662,7 @@ describe('parseTx', () => {
       const { tx } = tokenSelfSend
       const address = '0x6bF198c2B5c8E48Af4e876bc2173175b89b1DA0C'
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: tx.txid,
         blockHash: tx.blockHash,
         blockHeight: tx.blockHeight,
@@ -734,7 +709,7 @@ describe('parseTx', () => {
       const { tx } = uniApprove
       const address = '0x6bF198c2B5c8E48Af4e876bc2173175b89b1DA0C'
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: tx.txid,
         blockHeight: tx.blockHeight,
         blockTime: tx.timestamp,
@@ -766,7 +741,7 @@ describe('parseTx', () => {
       const { txMempool } = uniAddLiquidity
       const address = '0x6bF198c2B5c8E48Af4e876bc2173175b89b1DA0C'
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: txMempool.txid,
         blockHeight: txMempool.blockHeight,
         blockTime: txMempool.timestamp,
@@ -813,7 +788,7 @@ describe('parseTx', () => {
       const { tx } = uniAddLiquidity
       const address = '0x6bF198c2B5c8E48Af4e876bc2173175b89b1DA0C'
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: tx.txid,
         blockHeight: tx.blockHeight,
         blockTime: tx.timestamp,
@@ -869,7 +844,7 @@ describe('parseTx', () => {
       const { txMempool } = uniRemoveLiquidity
       const address = '0x6bF198c2B5c8E48Af4e876bc2173175b89b1DA0C'
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: txMempool.txid,
         blockHeight: txMempool.blockHeight,
         blockTime: txMempool.timestamp,
@@ -903,7 +878,7 @@ describe('parseTx', () => {
       const { tx } = uniRemoveLiquidity
       const address = '0x6bF198c2B5c8E48Af4e876bc2173175b89b1DA0C'
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: tx.txid,
         blockHeight: tx.blockHeight,
         blockTime: tx.timestamp,
@@ -962,7 +937,7 @@ describe('parseTx', () => {
       const { tx } = foxClaim
       const address = '0x6bF198c2B5c8E48Af4e876bc2173175b89b1DA0C'
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: tx.txid,
         blockHeight: tx.blockHeight,
         blockTime: tx.timestamp,
@@ -998,7 +973,7 @@ describe('parseTx', () => {
       const { txMempool } = foxStake
       const address = '0x6bF198c2B5c8E48Af4e876bc2173175b89b1DA0C'
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: txMempool.txid,
         blockHeight: txMempool.blockHeight,
         blockTime: txMempool.timestamp,
@@ -1022,7 +997,7 @@ describe('parseTx', () => {
       const { tx } = foxStake
       const address = '0x6bF198c2B5c8E48Af4e876bc2173175b89b1DA0C'
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: tx.txid,
         blockHeight: tx.blockHeight,
         blockTime: tx.timestamp,
@@ -1061,7 +1036,7 @@ describe('parseTx', () => {
       const { txMempool } = foxExit
       const address = '0x6bF198c2B5c8E48Af4e876bc2173175b89b1DA0C'
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: txMempool.txid,
         blockHeight: txMempool.blockHeight,
         blockTime: txMempool.timestamp,
@@ -1085,7 +1060,7 @@ describe('parseTx', () => {
       const { tx } = foxExit
       const address = '0x6bF198c2B5c8E48Af4e876bc2173175b89b1DA0C'
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: tx.txid,
         blockHeight: tx.blockHeight,
         blockTime: tx.timestamp,
@@ -1135,7 +1110,7 @@ describe('parseTx', () => {
       const { tx } = yearnApproval
       const address = '0x1399D13F3A0aaf08f7C5028D81447a311e4760c4'
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: tx.txid,
         blockHeight: tx.blockHeight,
         blockTime: tx.timestamp,
@@ -1165,7 +1140,7 @@ describe('parseTx', () => {
       const { tx } = yearnDepositShapeShiftRouter
       const address = '0x1399D13F3A0aaf08f7C5028D81447a311e4760c4'
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: tx.txid,
         blockHeight: tx.blockHeight,
         blockTime: tx.timestamp,
@@ -1212,7 +1187,7 @@ describe('parseTx', () => {
       const { tx } = yearnWithdrawal
       const address = '0x1399D13F3A0aaf08f7C5028D81447a311e4760c4'
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: tx.txid,
         blockHeight: tx.blockHeight,
         blockTime: tx.timestamp,
@@ -1259,7 +1234,7 @@ describe('parseTx', () => {
       const { tx } = yearnDeposit
       const address = '0x934be745172066EDF795ffc5EA9F28f19b440c63'
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: tx.txid,
         blockHeight: tx.blockHeight,
         blockTime: tx.timestamp,
@@ -1308,7 +1283,7 @@ describe('parseTx', () => {
       const { tx } = foxyStake
       const address = '0xCBa38513451bCE398A87F9950a154034Cad59cE9'
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: tx.txid,
         blockHeight: tx.blockHeight,
         blockTime: tx.timestamp,
@@ -1357,7 +1332,7 @@ describe('parseTx', () => {
       const { tx } = foxyUnstake
       const address = '0x557C61Ec8F7A675BE03EFe11962430ac8Cff4229'
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: tx.txid,
         blockHeight: tx.blockHeight,
         blockTime: tx.timestamp,
@@ -1406,7 +1381,7 @@ describe('parseTx', () => {
       const { tx } = foxyInstantUnstake
       const address = '0x1f41A6429D2035035253859f6edBd6438Ecf5d39'
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: tx.txid,
         blockHeight: tx.blockHeight,
         blockTime: tx.timestamp,
@@ -1455,7 +1430,7 @@ describe('parseTx', () => {
       const { tx } = foxyClaimWithdraw
       const address = '0x55FB947880EE0660C90bC2055748aD70956FbE3c'
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: tx.txid,
         blockHeight: tx.blockHeight,
         blockTime: tx.timestamp,
@@ -1498,7 +1473,7 @@ describe('parseTx', () => {
       const address = '0x2D801972327b0F11422d9Cc14A3d00B07ae0CceB'
       const contractAddress = WETH_CONTRACT_MAINNET
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: tx.txid,
         blockHeight: tx.blockHeight,
         blockTime: tx.timestamp,
@@ -1553,7 +1528,7 @@ describe('parseTx', () => {
       const address = '0xE7F92E3d5FDe63C90A917e25854826873497ef3D'
       const contractAddress = WETH_CONTRACT_MAINNET
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: tx2.txid,
         blockHeight: tx2.blockHeight,
         blockTime: tx2.timestamp,
@@ -1618,7 +1593,7 @@ describe('parseTx', () => {
         type: TransferType.Receive,
       }
 
-      const expected: Tx = {
+      const expected: ParsedTx = {
         txid: tx.txid,
         blockHeight: tx.blockHeight,
         blockTime: tx.timestamp,

@@ -1,4 +1,4 @@
-import { AssetId, ChainId, fromChainId } from '@shapeshiftoss/caip'
+import { AssetId, ChainId, fromChainId, generateAssetIdFromOsmosisDenom } from '@shapeshiftoss/caip'
 import { BIP44Params, KnownChainIds } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 import { bech32 } from 'bech32'
@@ -24,8 +24,10 @@ import {
 } from '../types'
 import { toAddressNList, toRootDerivationPath } from '../utils'
 import { bnOrZero } from '../utils/bignumber'
+import { cosmos, osmosis, thorchain } from './'
 import {
   BuildTransactionInput,
+  CosmosSDKToken,
   Delegation,
   Redelegation,
   RedelegationEntry,
@@ -81,6 +83,11 @@ export const cosmosSdkChainIds = [
 ] as const
 
 export type CosmosSdkChainId = typeof cosmosSdkChainIds[number]
+
+export type CosmosSdkChainAdapter =
+  | cosmos.ChainAdapter
+  | osmosis.ChainAdapter
+  | thorchain.ChainAdapter
 
 type Denom = 'uatom' | 'uosmo' | 'rune'
 
@@ -141,10 +148,6 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
     return this.chainId
   }
 
-  buildBIP44Params(params: Partial<BIP44Params>): BIP44Params {
-    return { ...this.defaultBIP44Params, ...params }
-  }
-
   getBIP44Params({ accountNumber }: GetBIP44ParamsInput): BIP44Params {
     if (accountNumber < 0) {
       throw new Error('accountNumber must be >= 0')
@@ -195,7 +198,12 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
           })),
         }))
 
-        return { ...data, delegations, redelegations, undelegations, rewards }
+        const assets = data.assets.map<CosmosSDKToken>((asset) => ({
+          amount: asset.amount,
+          assetId: generateAssetIdFromOsmosisDenom(asset.denom),
+        }))
+
+        return { ...data, delegations, redelegations, undelegations, rewards, assets }
       })()
 
       return {
@@ -205,6 +213,7 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
         chain: this.getType(),
         chainSpecific: {
           accountNumber: account.accountNumber.toString(),
+          assets: account.assets,
           sequence: account.sequence.toString(),
           delegations: account.delegations,
           redelegations: account.redelegations,
@@ -286,11 +295,13 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
   ): Promise<{ txToSign: SignTx<U> }> {
     const {
       account,
-      bip44Params,
+      accountNumber,
       chainSpecific: { gas, fee },
       msg,
       memo = '',
     } = tx
+
+    const bip44Params = this.getBIP44Params({ accountNumber })
 
     const unsignedTx = {
       fee: { amount: [{ amount: bnOrZero(fee).toString(), denom: this.denom }], gas },
@@ -342,9 +353,10 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
     onMessage: (msg: Transaction) => void,
     onError: (err: SubscribeError) => void,
   ): Promise<void> {
-    const { wallet, bip44Params = this.defaultBIP44Params } = input
+    const { accountNumber, wallet } = input
 
-    const address = await this.getAddress({ wallet, bip44Params })
+    const bip44Params = this.getBIP44Params({ accountNumber })
+    const address = await this.getAddress({ accountNumber, wallet })
     const subscriptionId = toRootDerivationPath(bip44Params)
 
     await this.providers.ws.subscribeTxs(
@@ -361,7 +373,8 @@ export abstract class CosmosSdkBaseAdapter<T extends CosmosSdkChainId> implement
   unsubscribeTxs(input?: SubscribeTxsInput): void {
     if (!input) return this.providers.ws.unsubscribeTxs()
 
-    const { bip44Params = this.defaultBIP44Params } = input
+    const { accountNumber } = input
+    const bip44Params = this.getBIP44Params({ accountNumber })
     const subscriptionId = toRootDerivationPath(bip44Params)
 
     this.providers.ws.unsubscribeTxs(subscriptionId, { topic: 'txs', addresses: [] })

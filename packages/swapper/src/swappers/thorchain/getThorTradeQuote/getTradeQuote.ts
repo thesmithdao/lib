@@ -1,23 +1,27 @@
 import { CHAIN_NAMESPACE, ChainId, fromAssetId } from '@shapeshiftoss/caip'
-import { ChainAdapter, UtxoBaseAdapter } from '@shapeshiftoss/chain-adapters'
-import { KnownChainIds } from '@shapeshiftoss/types'
+import {
+  CosmosSdkBaseAdapter,
+  EvmBaseAdapter,
+  UtxoBaseAdapter,
+} from '@shapeshiftoss/chain-adapters'
 
 import {
-  EvmSupportedChainAdapter,
-  EvmSupportedChainIds,
   GetTradeQuoteInput,
   GetUtxoTradeQuoteInput,
   SwapError,
-  SwapErrorTypes,
+  SwapErrorType,
   SwapperName,
   TradeQuote,
-  UtxoSupportedChainIds,
 } from '../../../api'
 import { bn, bnOrZero, fromBaseUnit, toBaseUnit } from '../../utils/bignumber'
 import { DEFAULT_SLIPPAGE } from '../../utils/constants'
 import { RUNE_OUTBOUND_TRANSACTION_FEE_CRYPTO_HUMAN } from '../constants'
+import {
+  ThorCosmosSdkSupportedChainId,
+  ThorEvmSupportedChainId,
+  ThorUtxoSupportedChainId,
+} from '../ThorchainSwapper'
 import { ThorchainSwapperDeps } from '../types'
-import { getThorTxInfo as getBtcThorTxInfo } from '../utils/bitcoin/utils/getThorTxData'
 import {
   MAX_THORCHAIN_TRADE,
   THOR_MINIMUM_PADDING,
@@ -29,6 +33,7 @@ import { getUsdRate } from '../utils/getUsdRate/getUsdRate'
 import { isRune } from '../utils/isRune/isRune'
 import { getEvmTxFees } from '../utils/txFeeHelpers/evmTxFees/getEvmTxFees'
 import { getUtxoTxFees } from '../utils/txFeeHelpers/utxoTxFees/getUtxoTxFees'
+import { getThorTxInfo } from '../utxo/utils/getThorTxData'
 import { getSlippage } from './getSlippage'
 
 type CommonQuoteFields = Omit<TradeQuote<ChainId>, 'allowanceContract' | 'feeData'>
@@ -47,15 +52,11 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
     sellAsset,
     buyAsset,
     sellAmountBeforeFeesCryptoBaseUnit: sellAmountCryptoBaseUnit,
-    bip44Params,
+    accountNumber,
     chainId,
     receiveAddress,
     sendMax,
   } = input
-
-  if (!bip44Params) {
-    throw new Error('bip44Params required in getThorTradeQuote')
-  }
 
   try {
     const { assetReference: sellAssetReference } = fromAssetId(sellAsset.assetId)
@@ -67,7 +68,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
       throw new SwapError(
         `[getThorTradeQuote] - No chain adapter found for ${chainId} or ${buyAssetChainId}.`,
         {
-          code: SwapErrorTypes.UNSUPPORTED_CHAIN,
+          code: SwapErrorType.UNSUPPORTED_CHAIN,
           details: { sellAssetChainId: chainId, buyAssetChainId },
         },
       )
@@ -127,7 +128,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
       sources: [{ name: SwapperName.Thorchain, proportion: '1' }],
       buyAsset,
       sellAsset,
-      bip44Params,
+      accountNumber,
       minimumCryptoHuman: minimumSellAssetAmountPaddedCryptoHuman,
       recommendedSlippage: recommendedSlippage.toPrecision(),
     }
@@ -135,11 +136,12 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
     const { chainNamespace } = fromAssetId(sellAsset.assetId)
     switch (chainNamespace) {
       case CHAIN_NAMESPACE.Evm:
-        return (async (): Promise<TradeQuote<EvmSupportedChainIds>> => {
+        return (async (): Promise<TradeQuote<ThorEvmSupportedChainId>> => {
           const sellChainFeeAssetId = sellAdapter.getFeeAssetId()
           const evmAddressData = await getInboundAddressDataForChain(
             deps.daemonUrl,
             sellChainFeeAssetId,
+            false,
           )
           const router = evmAddressData?.router
           if (!router)
@@ -148,7 +150,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
             )
 
           const feeData = await getEvmTxFees({
-            adapter: sellAdapter as unknown as EvmSupportedChainAdapter,
+            adapter: sellAdapter as unknown as EvmBaseAdapter<ThorEvmSupportedChainId>,
             sellAssetReference,
             buyAssetTradeFeeUsd,
           })
@@ -161,8 +163,8 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
         })()
 
       case CHAIN_NAMESPACE.Utxo:
-        return (async (): Promise<TradeQuote<UtxoSupportedChainIds>> => {
-          const { vault, opReturnData, pubkey } = await getBtcThorTxInfo({
+        return (async (): Promise<TradeQuote<ThorUtxoSupportedChainId>> => {
+          const { vault, opReturnData, pubkey } = await getThorTxInfo({
             deps,
             sellAsset,
             buyAsset,
@@ -178,7 +180,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
             vault,
             opReturnData,
             pubkey,
-            sellAdapter: sellAdapter as unknown as UtxoBaseAdapter<UtxoSupportedChainIds>,
+            sellAdapter: sellAdapter as unknown as UtxoBaseAdapter<ThorUtxoSupportedChainId>,
             buyAssetTradeFeeUsd,
             sendMax,
           })
@@ -190,9 +192,9 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
           }
         })()
       case CHAIN_NAMESPACE.CosmosSdk:
-        return (async (): Promise<TradeQuote<KnownChainIds.CosmosMainnet>> => {
+        return (async (): Promise<TradeQuote<ThorCosmosSdkSupportedChainId>> => {
           const feeData = await (
-            sellAdapter as ChainAdapter<KnownChainIds.CosmosMainnet>
+            sellAdapter as unknown as CosmosSdkBaseAdapter<ThorCosmosSdkSupportedChainId>
           ).getFeeData({})
 
           return {
@@ -208,7 +210,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
         })()
       default:
         throw new SwapError('[getThorTradeQuote] - Asset chainId is not supported.', {
-          code: SwapErrorTypes.UNSUPPORTED_CHAIN,
+          code: SwapErrorType.UNSUPPORTED_CHAIN,
           details: { chainId },
         })
     }
@@ -216,7 +218,7 @@ export const getThorTradeQuote: GetThorTradeQuote = async ({ deps, input }) => {
     if (e instanceof SwapError) throw e
     throw new SwapError('[getThorTradeQuote]', {
       cause: e,
-      code: SwapErrorTypes.TRADE_QUOTE_FAILED,
+      code: SwapErrorType.TRADE_QUOTE_FAILED,
     })
   }
 }

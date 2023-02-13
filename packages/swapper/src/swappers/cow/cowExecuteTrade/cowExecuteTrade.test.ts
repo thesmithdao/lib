@@ -28,6 +28,8 @@ jest.mock('@shapeshiftoss/chain-adapters', () => {
     ...actualChainAdapters,
     ethereum: {
       ChainAdapter: {
+        // TODO: test account 0+
+        getBIP44Params: jest.fn(() => actualChainAdapters.ethereum.ChainAdapter.defaultBIP44Params),
         defaultBIP44Params: actualChainAdapters.ethereum.ChainAdapter.defaultBIP44Params,
         signMessage: jest.fn(() => Promise.resolve(Signature)),
       },
@@ -63,7 +65,7 @@ const cowTradeEthToFox: CowTrade<KnownChainIds.EthereumMainnet> = {
   sources: [{ name: SwapperName.CowSwap, proportion: '1' }],
   buyAsset: FOX,
   sellAsset: ETH,
-  bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
+  accountNumber: 0,
   receiveAddress: 'address11',
   feeAmountInSellTokenCryptoBaseUnit: '14557942658757988',
   sellAmountDeductFeeCryptoBaseUnit: '111111',
@@ -85,7 +87,7 @@ const cowTradeWethToFox: CowTrade<KnownChainIds.EthereumMainnet> = {
   sources: [{ name: SwapperName.CowSwap, proportion: '1' }],
   buyAsset: FOX,
   sellAsset: WETH,
-  bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
+  accountNumber: 0,
   receiveAddress: 'address11',
   feeAmountInSellTokenCryptoBaseUnit: '3514395197690019',
   sellAmountDeductFeeCryptoBaseUnit: '16685605000000000',
@@ -107,7 +109,7 @@ const cowTradeFoxToEth: CowTrade<KnownChainIds.EthereumMainnet> = {
   sources: [{ name: SwapperName.CowSwap, proportion: '1' }],
   buyAsset: ETH,
   sellAsset: FOX,
-  bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
+  accountNumber: 0,
   receiveAddress: 'address11',
   feeAmountInSellTokenCryptoBaseUnit: '61804771879693983744',
   sellAmountDeductFeeCryptoBaseUnit: '938195228120306016256',

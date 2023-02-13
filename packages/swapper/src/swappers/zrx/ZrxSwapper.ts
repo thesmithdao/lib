@@ -1,5 +1,6 @@
 import { Asset } from '@shapeshiftoss/asset-service'
-import { AssetId, ChainId } from '@shapeshiftoss/caip'
+import { AssetId, ChainId, fromAssetId } from '@shapeshiftoss/caip'
+import { avalanche, ethereum, optimism } from '@shapeshiftoss/chain-adapters'
 import { KnownChainIds } from '@shapeshiftoss/types'
 
 import {
@@ -9,10 +10,9 @@ import {
   ApproveInfiniteInput,
   BuildTradeInput,
   BuyAssetBySellIdInput,
-  EvmSupportedChainIds,
   GetEvmTradeQuoteInput,
   SwapError,
-  SwapErrorTypes,
+  SwapErrorType,
   Swapper,
   SwapperName,
   SwapperType,
@@ -29,7 +29,17 @@ import { zrxApproveAmount, zrxApproveInfinite } from './zrxApprove/zrxApprove'
 import { zrxBuildTrade } from './zrxBuildTrade/zrxBuildTrade'
 import { zrxExecuteTrade } from './zrxExecuteTrade/zrxExecuteTrade'
 
-export class ZrxSwapper<T extends EvmSupportedChainIds> implements Swapper<T> {
+export type ZrxSupportedChainId =
+  | KnownChainIds.EthereumMainnet
+  | KnownChainIds.AvalancheMainnet
+  | KnownChainIds.OptimismMainnet
+
+export type ZrxSupportedChainAdapter =
+  | ethereum.ChainAdapter
+  | avalanche.ChainAdapter
+  | optimism.ChainAdapter
+
+export class ZrxSwapper<T extends ZrxSupportedChainId> implements Swapper<T> {
   readonly name = SwapperName.Zrx
   deps: ZrxSwapperDeps
   chainId: ChainId
@@ -45,9 +55,11 @@ export class ZrxSwapper<T extends EvmSupportedChainIds> implements Swapper<T> {
         return SwapperType.ZrxEthereum
       case KnownChainIds.AvalancheMainnet:
         return SwapperType.ZrxAvalanche
+      case KnownChainIds.OptimismMainnet:
+        return SwapperType.ZrxOptimism
       default:
         throw new SwapError('[getType]', {
-          code: SwapErrorTypes.UNSUPPORTED_CHAIN,
+          code: SwapErrorType.UNSUPPORTED_CHAIN,
         })
     }
   }
@@ -84,14 +96,16 @@ export class ZrxSwapper<T extends EvmSupportedChainIds> implements Swapper<T> {
     const { assetIds = [], sellAssetId } = args
     return assetIds.filter(
       (id) =>
-        id.startsWith(this.chainId) &&
-        sellAssetId?.startsWith(this.chainId) &&
+        fromAssetId(id).chainId === this.chainId &&
+        fromAssetId(sellAssetId).chainId === this.chainId &&
         !UNSUPPORTED_ASSETS.includes(id),
     )
   }
 
   filterAssetIdsBySellable(assetIds: AssetId[] = []): AssetId[] {
-    return assetIds.filter((id) => id.startsWith(this.chainId) && !UNSUPPORTED_ASSETS.includes(id))
+    return assetIds.filter(
+      (id) => fromAssetId(id).chainId === this.chainId && !UNSUPPORTED_ASSETS.includes(id),
+    )
   }
 
   async getTradeTxs(tradeResult: TradeResult): Promise<TradeTxs> {

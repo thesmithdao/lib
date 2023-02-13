@@ -1,3 +1,85 @@
+# [@shapeshiftoss/chain-adapters-v11.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v10.14.0...@shapeshiftoss/chain-adapters-v11.0.0) (2023-02-08)
+
+
+### Features
+
+* improve swapper types ([#1181](https://github.com/shapeshift/lib/issues/1181)) ([5f455d2](https://github.com/shapeshift/lib/commit/5f455d2883c0efd6f423588f81b86189d07ad5e4))
+
+
+### BREAKING CHANGES
+
+* explicit supported chain ids by swapper
+
+# [@shapeshiftoss/chain-adapters-v10.14.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v10.13.0...@shapeshiftoss/chain-adapters-v10.14.0) (2023-01-31)
+
+
+### Features
+
+* parse osmosis lp transactions ([#1183](https://github.com/shapeshift/lib/issues/1183)) ([40cc338](https://github.com/shapeshift/lib/commit/40cc338ec264c977b911b902b57eee84b931cf7e))
+
+# [@shapeshiftoss/chain-adapters-v10.13.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v10.12.0...@shapeshiftoss/chain-adapters-v10.13.0) (2023-01-26)
+
+
+### Features
+
+* support EVM memos / UTXOs OP_RETURNs as memos ([#1180](https://github.com/shapeshift/lib/issues/1180)) ([c3cec68](https://github.com/shapeshift/lib/commit/c3cec688cc4f092f45d17b7a5d34194175ca6096))
+
+# [@shapeshiftoss/chain-adapters-v10.12.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v10.11.0...@shapeshiftoss/chain-adapters-v10.12.0) (2023-01-26)
+
+
+### Features
+
+* expose coinSelect from chain adapters ([#1179](https://github.com/shapeshift/lib/issues/1179)) ([1c2098c](https://github.com/shapeshift/lib/commit/1c2098cab1ac5ce46e02343bc7f609adb263cfaf))
+
+# [@shapeshiftoss/chain-adapters-v10.11.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v10.10.0...@shapeshiftoss/chain-adapters-v10.11.0) (2023-01-23)
+
+
+### Features
+
+* **chain-adapters:** return token balances from cosmossdk getaccount method ([#1176](https://github.com/shapeshift/lib/issues/1176)) ([45ac971](https://github.com/shapeshift/lib/commit/45ac9715a4b9cfbd16fca899704bac6d70c2e530))
+
+# [@shapeshiftoss/chain-adapters-v10.10.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v10.9.0...@shapeshiftoss/chain-adapters-v10.10.0) (2023-01-20)
+
+
+### Features
+
+* optimism l1 fees ([#1170](https://github.com/shapeshift/lib/issues/1170)) ([7105f94](https://github.com/shapeshift/lib/commit/7105f94cd58483b91041b8a0d5b2841fe1a37a98))
+
+# [@shapeshiftoss/chain-adapters-v10.9.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v10.8.0...@shapeshiftoss/chain-adapters-v10.9.0) (2023-01-19)
+
+
+### Features
+
+* **utxoSelect:** use `input.from` as change address if passed ([#1168](https://github.com/shapeshift/lib/issues/1168)) ([abe4b8c](https://github.com/shapeshift/lib/commit/abe4b8cf3999d8698f378b89d9d44bb07e228a65))
+
+# [@shapeshiftoss/chain-adapters-v10.8.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v10.7.2...@shapeshiftoss/chain-adapters-v10.8.0) (2023-01-13)
+
+
+### Features
+
+* add optimism ([#1157](https://github.com/shapeshift/lib/issues/1157)) ([177725d](https://github.com/shapeshift/lib/commit/177725dc04c00ba982bbebe8e84a7edcff395367))
+
+# [@shapeshiftoss/chain-adapters-v10.7.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v10.7.1...@shapeshiftoss/chain-adapters-v10.7.2) (2023-01-06)
+
+
+### Bug Fixes
+
+* utxo base adapter get address ([#1155](https://github.com/shapeshift/lib/issues/1155)) ([ff3b1ee](https://github.com/shapeshift/lib/commit/ff3b1ee3c2422a210988b967eb51af0fb03aa021))
+
+# [@shapeshiftoss/chain-adapters-v10.7.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v10.7.0...@shapeshiftoss/chain-adapters-v10.7.1) (2023-01-05)
+
+
+### Bug Fixes
+
+* only inject accountNumber, not full bip44params ([#1147](https://github.com/shapeshift/lib/issues/1147)) ([7e53b6d](https://github.com/shapeshift/lib/commit/7e53b6d517d069d8a1831e4b474405b4e9220dcf))
+
+# [@shapeshiftoss/chain-adapters-v10.7.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v10.6.0...@shapeshiftoss/chain-adapters-v10.7.0) (2023-01-05)
+
+
+### Features
+
+* **chain-adapters:UtxoBaseAdapter:** allow UTXOs selection from `from` param ([#1148](https://github.com/shapeshift/lib/issues/1148)) ([ea9cede](https://github.com/shapeshift/lib/commit/ea9cedea8f99e684ffa00df46b634b62cd156450))
+
 # [@shapeshiftoss/chain-adapters-v10.6.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v10.5.1...@shapeshiftoss/chain-adapters-v10.6.0) (2022-12-23)
 
 

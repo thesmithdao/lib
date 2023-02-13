@@ -5,6 +5,8 @@ import {
   ethAssetId,
   ethChainId,
   foxAssetId,
+  optimismAssetId,
+  optimismChainId,
   thorchainAssetId,
   thorchainChainId,
 } from '@shapeshiftoss/caip'
@@ -113,6 +115,22 @@ export const AVAX: Asset = {
   explorerTxLink: 'https://snowtrace.io/tx/',
 }
 
+export const OPTIMISM: Asset = {
+  assetId: optimismAssetId,
+  chainId: optimismChainId,
+  name: 'Ethereum',
+  networkName: 'Optimism',
+  symbol: 'ETH',
+  precision: 18,
+  color: '#5C6BC0',
+  networkColor: '#FC0424',
+  icon: 'https://assets.coincap.io/assets/icons/256/eth.png',
+  networkIcon: 'https://assets.coingecko.com/coins/images/25244/thumb/Optimism.png?1660904599',
+  explorer: 'https://optimistic.etherscan.io',
+  explorerAddressLink: 'https://optimistic.etherscan.io/address/',
+  explorerTxLink: 'https://optimistic.etherscan.io/tx/',
+}
+
 export const RUNE: Asset = {
   assetId: thorchainAssetId,
   chainId: thorchainChainId,
@@ -121,7 +139,7 @@ export const RUNE: Asset = {
   precision: 8,
   color: '#33FF99',
   icon: 'https://assets.coincap.io/assets/icons/rune@2x.png',
-  explorer: 'https://v2.viewblock.io/thorchain',
-  explorerAddressLink: 'https://v2.viewblock.io/thorchain/address/',
-  explorerTxLink: 'https://v2.viewblock.io/thorchain/tx/',
+  explorer: 'https://viewblock.io/thorchain',
+  explorerAddressLink: 'https://viewblock.io/thorchain/address/',
+  explorerTxLink: 'https://viewblock.io/thorchain/tx/',
 }

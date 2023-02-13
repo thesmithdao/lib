@@ -1,4 +1,4 @@
-import { JsonRpcProvider } from '@ethersproject/providers'
+// import { JsonRpcProvider } from '@ethersproject/providers'
 import {
   FindAllMarketArgs,
   HistoryData,
@@ -7,21 +7,23 @@ import {
   MarketDataArgs,
   PriceHistoryArgs,
 } from '@shapeshiftoss/types'
-import { Yearn } from '@yfi/sdk'
 
+// import { Yearn } from '@yfi/sdk'
 import { MarketService } from './api'
 import { CoinCapMarketService } from './coincap/coincap'
 import { CoinGeckoMarketService } from './coingecko/coingecko'
 import { FoxyMarketService } from './foxy/foxy'
 import { IdleMarketService } from './idle/idle'
 import { OsmosisMarketService } from './osmosis/osmosis'
-import { YearnTokenMarketCapService } from './yearn/yearn-tokens'
-import { YearnVaultMarketCapService } from './yearn/yearn-vaults'
+// import { YearnTokenMarketCapService } from './yearn/yearn-tokens'
+// import { YearnVaultMarketCapService } from './yearn/yearn-vaults'
 
 export type ProviderUrls = {
   jsonRpcProviderUrl: string
   unchainedEthereumHttpUrl: string
   unchainedEthereumWsUrl: string
+  osmosisMarketDataUrl: string
+  osmosisPoolMetadataUrl: string
 }
 
 export type MarketServiceManagerArgs = {
@@ -34,25 +36,24 @@ export class MarketServiceManager {
   marketProviders: MarketService[]
 
   constructor(args: MarketServiceManagerArgs) {
-    const { coinGeckoAPIKey = '', providerUrls, yearnChainReference } = args
-
-    const { jsonRpcProviderUrl } = providerUrls
+    const { coinGeckoAPIKey = '', providerUrls } = args
 
     // TODO(0xdef1cafe): after chain agnosticism, we need to dependency inject a chainReference here
     // YearnVaultMarketCapService deps
-    const network = yearnChainReference ?? 1 // 1 for mainnet
-    const provider = new JsonRpcProvider(jsonRpcProviderUrl)
-    const yearnSdk = new Yearn(network, { provider })
+    // const network = yearnChainReference ?? 1 // 1 for mainnet
+    // const provider = new JsonRpcProvider(providerUrls.jsonRpcProviderUrl)
+    // const yearnSdk = new Yearn(network, { provider })
 
     this.marketProviders = [
       // Order of this MarketProviders array constitutes the order of providers we will be checking first.
       // More reliable providers should be listed first.
       new CoinGeckoMarketService({ coinGeckoAPIKey }),
       new CoinCapMarketService(),
-      new YearnVaultMarketCapService({ yearnSdk }),
-      new YearnTokenMarketCapService({ yearnSdk }),
+      // Yearn is currently borked upstream
+      // new YearnVaultMarketCapService({ yearnSdk }),
+      // new YearnTokenMarketCapService({ yearnSdk }),
       new IdleMarketService({ coinGeckoAPIKey, providerUrls }),
-      new OsmosisMarketService(),
+      new OsmosisMarketService(providerUrls),
       new FoxyMarketService({ coinGeckoAPIKey, providerUrls }),
     ]
   }

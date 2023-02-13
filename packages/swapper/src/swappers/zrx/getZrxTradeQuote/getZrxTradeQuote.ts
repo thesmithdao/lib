@@ -2,10 +2,9 @@ import { fromAssetId } from '@shapeshiftoss/caip'
 import { AxiosResponse } from 'axios'
 
 import {
-  EvmSupportedChainIds,
   GetEvmTradeQuoteInput,
   SwapError,
-  SwapErrorTypes,
+  SwapErrorType,
   SwapSource,
   TradeQuote,
 } from '../../../api'
@@ -17,8 +16,9 @@ import { ZrxPriceResponse } from '../types'
 import { DEFAULT_SOURCE } from '../utils/constants'
 import { baseUrlFromChainId } from '../utils/helpers/helpers'
 import { zrxServiceFactory } from '../utils/zrxService'
+import { ZrxSupportedChainId } from '../ZrxSwapper'
 
-export async function getZrxTradeQuote<T extends EvmSupportedChainIds>(
+export async function getZrxTradeQuote<T extends ZrxSupportedChainId>(
   input: GetEvmTradeQuoteInput,
 ): Promise<TradeQuote<T>> {
   try {
@@ -26,13 +26,13 @@ export async function getZrxTradeQuote<T extends EvmSupportedChainIds>(
       sellAsset,
       buyAsset,
       sellAmountBeforeFeesCryptoBaseUnit: sellAmountCryptoBaseUnit,
-      bip44Params,
+      accountNumber,
     } = input
     if (buyAsset.chainId !== input.chainId || sellAsset.chainId !== input.chainId) {
       throw new SwapError(
         '[getZrxTradeQuote] - Both assets need to be on the same supported EVM chain to use Zrx',
         {
-          code: SwapErrorTypes.UNSUPPORTED_PAIR,
+          code: SwapErrorType.UNSUPPORTED_PAIR,
           details: { buyAssetChainId: buyAsset.chainId, sellAssetChainId: sellAsset.chainId },
         },
       )
@@ -102,7 +102,7 @@ export async function getZrxTradeQuote<T extends EvmSupportedChainIds>(
       sellAssetErc20Address &&
       bnOrZero(APPROVAL_GAS_LIMIT).multipliedBy(bnOrZero(gasPriceCryptoBaseUnit)).toString()
 
-    const tradeQuote: TradeQuote<EvmSupportedChainIds> = {
+    const tradeQuote: TradeQuote<ZrxSupportedChainId> = {
       rate,
       minimumCryptoHuman: minimum,
       maximum,
@@ -122,11 +122,11 @@ export async function getZrxTradeQuote<T extends EvmSupportedChainIds>(
       allowanceContract: allowanceTarget,
       buyAsset,
       sellAsset,
-      bip44Params,
+      accountNumber,
     }
     return tradeQuote as TradeQuote<T>
   } catch (e) {
     if (e instanceof SwapError) throw e
-    throw new SwapError('[getZrxTradeQuote]', { cause: e, code: SwapErrorTypes.TRADE_QUOTE_FAILED })
+    throw new SwapError('[getZrxTradeQuote]', { cause: e, code: SwapErrorType.TRADE_QUOTE_FAILED })
   }
 }

@@ -1,3 +1,52 @@
+# [@shapeshiftoss/caip-v8.13.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v8.12.0...@shapeshiftoss/caip-v8.13.0) (2023-02-06)
+
+
+### Features
+
+* **market-service:** return market data for osmosis liquidity pools ([#1192](https://github.com/shapeshift/lib/issues/1192)) ([560a5ac](https://github.com/shapeshift/lib/commit/560a5ac8248df712eab156593b09e38ba184eebc))
+
+# [@shapeshiftoss/caip-v8.12.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v8.11.0...@shapeshiftoss/caip-v8.12.0) (2023-02-02)
+
+
+### Features
+
+* **caip:** generate asset ids from osmosis lp token denoms ([#1189](https://github.com/shapeshift/lib/issues/1189)) ([7efb75e](https://github.com/shapeshift/lib/commit/7efb75ee63a55a8ff1ab94e8e053736f8a6b07ad))
+
+# [@shapeshiftoss/caip-v8.11.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v8.10.0...@shapeshiftoss/caip-v8.11.0) (2023-02-01)
+
+
+### Features
+
+* add support for eth and usdt on optimism banxa ([#1186](https://github.com/shapeshift/lib/issues/1186)) ([92441d9](https://github.com/shapeshift/lib/commit/92441d973cdab4f9cda414d83f3aa1fe13cf1d7d))
+
+# [@shapeshiftoss/caip-v8.10.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v8.9.0...@shapeshiftoss/caip-v8.10.0) (2023-01-23)
+
+
+### Features
+
+* **chain-adapters:** return token balances from cosmossdk getaccount method ([#1176](https://github.com/shapeshift/lib/issues/1176)) ([45ac971](https://github.com/shapeshift/lib/commit/45ac9715a4b9cfbd16fca899704bac6d70c2e530))
+
+# [@shapeshiftoss/caip-v8.9.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v8.8.0...@shapeshiftoss/caip-v8.9.0) (2023-01-17)
+
+
+### Features
+
+* add optimism assets ([#1167](https://github.com/shapeshift/lib/issues/1167)) ([1712fc2](https://github.com/shapeshift/lib/commit/1712fc2f0f7696508bdcd47266e355a070b9f061))
+
+# [@shapeshiftoss/caip-v8.8.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v8.7.0...@shapeshiftoss/caip-v8.8.0) (2023-01-13)
+
+
+### Features
+
+* add optimism ([#1157](https://github.com/shapeshift/lib/issues/1157)) ([177725d](https://github.com/shapeshift/lib/commit/177725dc04c00ba982bbebe8e84a7edcff395367))
+
+# [@shapeshiftoss/caip-v8.7.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v8.6.0...@shapeshiftoss/caip-v8.7.0) (2023-01-06)
+
+
+### Features
+
+* **caip:** add bnb to thorPoolIdAssetIdSymbolMap ([#1154](https://github.com/shapeshift/lib/issues/1154)) ([28b6f39](https://github.com/shapeshift/lib/commit/28b6f39fa0829050a5ddde348f36e97d12cd6791))
+
 # [@shapeshiftoss/caip-v8.6.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/caip-v8.5.0...@shapeshiftoss/caip-v8.6.0) (2022-12-30)
 
 

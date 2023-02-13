@@ -1,3 +1,40 @@
+# [@shapeshiftoss/market-service-v7.7.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v7.7.0...@shapeshiftoss/market-service-v7.7.1) (2023-02-11)
+
+# [@shapeshiftoss/market-service-v7.7.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v7.6.0...@shapeshiftoss/market-service-v7.7.0) (2023-02-07)
+
+
+### Features
+
+* **market-service:** safe URL construction with URL module ([#1193](https://github.com/shapeshift/lib/issues/1193)) ([4b8931d](https://github.com/shapeshift/lib/commit/4b8931d4b0a28ce1734dba66e9ae0d1b43466e88))
+
+# [@shapeshiftoss/market-service-v7.6.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v7.5.0...@shapeshiftoss/market-service-v7.6.0) (2023-02-06)
+
+
+### Features
+
+* **market-service:** return market data for osmosis liquidity pools ([#1192](https://github.com/shapeshift/lib/issues/1192)) ([560a5ac](https://github.com/shapeshift/lib/commit/560a5ac8248df712eab156593b09e38ba184eebc))
+
+# [@shapeshiftoss/market-service-v7.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v7.4.0...@shapeshiftoss/market-service-v7.5.0) (2023-01-23)
+
+
+### Features
+
+* **market-service:** fix osmosis market-service bug, remove market-service cli ([#1173](https://github.com/shapeshift/lib/issues/1173)) ([65f30dd](https://github.com/shapeshift/lib/commit/65f30ddb060723d515f1e0c74c829675c60404ff))
+
+# [@shapeshiftoss/market-service-v7.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v7.3.0...@shapeshiftoss/market-service-v7.4.0) (2023-01-23)
+
+
+### Features
+
+* disable Yearn in market-service / unchained-client ([#1174](https://github.com/shapeshift/lib/issues/1174)) ([6551bc1](https://github.com/shapeshift/lib/commit/6551bc106327c6b6f965b443aab6959a4d943f6e))
+
+# [@shapeshiftoss/market-service-v7.3.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v7.2.2...@shapeshiftoss/market-service-v7.3.0) (2023-01-13)
+
+
+### Features
+
+* add optimism ([#1157](https://github.com/shapeshift/lib/issues/1157)) ([177725d](https://github.com/shapeshift/lib/commit/177725dc04c00ba982bbebe8e84a7edcff395367))
+
 # [@shapeshiftoss/market-service-v7.2.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/market-service-v7.2.1...@shapeshiftoss/market-service-v7.2.2) (2022-11-29)
 
 

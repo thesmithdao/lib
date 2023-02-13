@@ -1,11 +1,11 @@
 import { ethAssetId, fromAssetId } from '@shapeshiftoss/caip'
-import { ethereum, SignMessageInput, toAddressNList } from '@shapeshiftoss/chain-adapters'
+import { SignMessageInput, toAddressNList } from '@shapeshiftoss/chain-adapters'
 import { ETHSignMessage } from '@shapeshiftoss/hdwallet-core'
 import { KnownChainIds } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 import { ethers } from 'ethers'
 
-import { ExecuteTradeInput, SwapError, SwapErrorTypes, TradeResult } from '../../../api'
+import { ExecuteTradeInput, SwapError, SwapErrorType, TradeResult } from '../../../api'
 import { CowSwapperDeps } from '../CowSwapper'
 import { CowTrade } from '../types'
 import {
@@ -34,6 +34,7 @@ export async function cowExecuteTrade(
     buyAsset,
     feeAmountInSellTokenCryptoBaseUnit: feeAmountInSellToken,
     sellAmountDeductFeeCryptoBaseUnit: sellAmountWithoutFee,
+    accountNumber,
   } = cowTrade
 
   const { assetReference: sellAssetErc20Address, assetNamespace: sellAssetNamespace } = fromAssetId(
@@ -45,14 +46,14 @@ export async function cowExecuteTrade(
 
   if (sellAssetNamespace !== 'erc20') {
     throw new SwapError('[cowExecuteTrade] - Sell asset needs to be ERC-20 to use CowSwap', {
-      code: SwapErrorTypes.UNSUPPORTED_PAIR,
+      code: SwapErrorType.UNSUPPORTED_PAIR,
       details: { sellAssetNamespace },
     })
   }
 
   if (buyAssetChainId !== KnownChainIds.EthereumMainnet) {
     throw new SwapError('[cowExecuteTrade] - Buy asset needs to be on ETH mainnet to use CowSwap', {
-      code: SwapErrorTypes.UNSUPPORTED_PAIR,
+      code: SwapErrorType.UNSUPPORTED_PAIR,
       details: { buyAssetChainId },
     })
   }
@@ -81,7 +82,7 @@ export async function cowExecuteTrade(
     // For more info, check hashOrder method implementation
     const orderDigest = hashOrder(domain(1, COW_SWAP_SETTLEMENT_ADDRESS), orderToSign)
 
-    const bip44Params = ethereum.ChainAdapter.defaultBIP44Params
+    const bip44Params = adapter.getBIP44Params({ accountNumber })
     const message: SignMessageInput<ETHSignMessage> = {
       messageToSign: {
         addressNList: toAddressNList(bip44Params),
@@ -131,7 +132,7 @@ export async function cowExecuteTrade(
     if (e instanceof SwapError) throw e
     throw new SwapError('[cowExecuteTrade]', {
       cause: e,
-      code: SwapErrorTypes.EXECUTE_TRADE_FAILED,
+      code: SwapErrorType.EXECUTE_TRADE_FAILED,
     })
   }
 }

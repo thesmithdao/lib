@@ -2,7 +2,7 @@ import { ethAssetId, fromAssetId } from '@shapeshiftoss/caip'
 import { KnownChainIds } from '@shapeshiftoss/types'
 import { AxiosResponse } from 'axios'
 
-import { BuildTradeInput, SwapError, SwapErrorTypes } from '../../../api'
+import { BuildTradeInput, SwapError, SwapErrorType } from '../../../api'
 import { erc20AllowanceAbi } from '../../utils/abi/erc20Allowance-abi'
 import { bn, bnOrZero } from '../../utils/bignumber'
 import { getApproveContractData, isApprovalRequired } from '../../utils/helpers/helpers'
@@ -27,7 +27,7 @@ export async function cowBuildTrade(
       sellAsset,
       buyAsset,
       sellAmountBeforeFeesCryptoBaseUnit: sellAmountExcludeFeeCryptoBaseUnit,
-      bip44Params,
+      accountNumber,
       wallet,
     } = input
     const { adapter, web3 } = deps
@@ -40,21 +40,21 @@ export async function cowBuildTrade(
 
     if (sellAssetNamespace !== 'erc20') {
       throw new SwapError('[cowBuildTrade] - Sell asset needs to be ERC-20 to use CowSwap', {
-        code: SwapErrorTypes.UNSUPPORTED_PAIR,
+        code: SwapErrorType.UNSUPPORTED_PAIR,
         details: { sellAssetNamespace },
       })
     }
 
     if (buyAssetChainId !== KnownChainIds.EthereumMainnet) {
       throw new SwapError('[cowBuildTrade] - Buy asset needs to be on ETH mainnet to use CowSwap', {
-        code: SwapErrorTypes.UNSUPPORTED_PAIR,
+        code: SwapErrorType.UNSUPPORTED_PAIR,
         details: { buyAssetChainId },
       })
     }
 
     const buyToken =
       buyAsset.assetId !== ethAssetId ? buyAssetErc20Address : COW_SWAP_ETH_MARKER_ADDRESS
-    const receiveAddress = await adapter.getAddress({ wallet, bip44Params })
+    const receiveAddress = await adapter.getAddress({ accountNumber, wallet })
 
     /**
      * /v1/quote
@@ -137,7 +137,7 @@ export async function cowBuildTrade(
       sources: DEFAULT_SOURCE,
       buyAsset,
       sellAsset,
-      bip44Params,
+      accountNumber,
       receiveAddress,
       feeAmountInSellTokenCryptoBaseUnit,
       sellAmountDeductFeeCryptoBaseUnit: quoteSellAmountExcludeFeeCryptoBaseUnit,
@@ -166,7 +166,7 @@ export async function cowBuildTrade(
     if (e instanceof SwapError) throw e
     throw new SwapError('[cowBuildTrade]', {
       cause: e,
-      code: SwapErrorTypes.TRADE_QUOTE_FAILED,
+      code: SwapErrorType.TRADE_QUOTE_FAILED,
     })
   }
 }

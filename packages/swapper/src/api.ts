@@ -1,9 +1,9 @@
 import { Asset } from '@shapeshiftoss/asset-service'
 import { AssetId, ChainId } from '@shapeshiftoss/caip'
-import { avalanche, cosmos, ethereum, osmosis } from '@shapeshiftoss/chain-adapters'
+import { CosmosSdkChainId, EvmChainId, UtxoChainId } from '@shapeshiftoss/chain-adapters'
 import { createErrorClass } from '@shapeshiftoss/errors'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, ChainSpecific, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
+import { ChainSpecific, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
 
 export const SwapError = createErrorClass('SwapError')
 
@@ -17,6 +17,12 @@ type ChainSpecificQuoteFeeData<T extends ChainId> = ChainSpecific<
       totalFee?: string
     }
     [KnownChainIds.AvalancheMainnet]: {
+      estimatedGas?: string
+      gasPriceCryptoBaseUnit?: string
+      approvalFeeCryptoBaseUnit?: string
+      totalFee?: string
+    }
+    [KnownChainIds.OptimismMainnet]: {
       estimatedGas?: string
       gasPriceCryptoBaseUnit?: string
       approvalFeeCryptoBaseUnit?: string
@@ -41,6 +47,9 @@ type ChainSpecificQuoteFeeData<T extends ChainId> = ChainSpecific<
     [KnownChainIds.CosmosMainnet]: {
       estimatedGas: string
     }
+    [KnownChainIds.ThorchainMainnet]: {
+      estimatedGas: string
+    }
   }
 >
 
@@ -54,6 +63,15 @@ export type ByPairInput = {
   sellAssetId: AssetId
   buyAssetId: AssetId
 }
+
+export type GetSwappersWithQuoteMetadataArgs = GetTradeQuoteInput & { feeAsset: Asset }
+
+export type SwapperWithQuoteMetadata = {
+  swapper: Swapper<ChainId>
+  quote: TradeQuote<ChainId>
+  inputOutputRatio: number | undefined
+}
+export type GetSwappersWithQuoteMetadataReturn = SwapperWithQuoteMetadata[]
 
 export type BuyAssetBySellIdInput = {
   sellAssetId: AssetId
@@ -70,38 +88,21 @@ type CommonTradeInput = {
   sellAmountBeforeFeesCryptoBaseUnit: string
   sendMax: boolean
   receiveAddress: string
-  bip44Params: BIP44Params
+  accountNumber: number
 }
 
-export type EvmSupportedChainIds = KnownChainIds.EthereumMainnet | KnownChainIds.AvalancheMainnet
-
-export type CosmosSdkSupportedChainIds =
-  | KnownChainIds.CosmosMainnet
-  | KnownChainIds.OsmosisMainnet
-  | KnownChainIds.ThorchainMainnet
-
-export type EvmSupportedChainAdapter = ethereum.ChainAdapter | avalanche.ChainAdapter
-
-export type CosmosSdkSupportedChainAdapters = cosmos.ChainAdapter | osmosis.ChainAdapter
-
-export type UtxoSupportedChainIds =
-  | KnownChainIds.BitcoinMainnet
-  | KnownChainIds.DogecoinMainnet
-  | KnownChainIds.LitecoinMainnet
-  | KnownChainIds.BitcoinCashMainnet
-
 export type GetEvmTradeQuoteInput = CommonTradeInput & {
-  chainId: EvmSupportedChainIds
+  chainId: EvmChainId
 }
 
 export type GetCosmosSdkTradeQuoteInput = CommonTradeInput & {
-  chainId: CosmosSdkSupportedChainIds
+  chainId: CosmosSdkChainId
 }
 
 export type GetUtxoTradeQuoteInput = CommonTradeInput & {
-  chainId: UtxoSupportedChainIds
+  chainId: UtxoChainId
   accountType: UtxoAccountType
-  bip44Params: BIP44Params
+  accountNumber: number
   xpub: string
 }
 
@@ -123,7 +124,7 @@ interface TradeBase<C extends ChainId> {
   sources: SwapSource[]
   buyAsset: Asset
   sellAsset: Asset
-  bip44Params: BIP44Params
+  accountNumber: number
 }
 
 export interface TradeQuote<C extends ChainId> extends TradeBase<C> {
@@ -190,6 +191,7 @@ export enum SwapperName {
 export enum SwapperType {
   ZrxEthereum = '0xEthereum',
   ZrxAvalanche = '0xAvalanche',
+  ZrxOptimism = '0xOptimism',
   Thorchain = 'Thorchain',
   Osmosis = 'Osmosis',
   CowSwap = 'CoW Swap',
@@ -202,7 +204,7 @@ export type TradeTxs = {
 }
 
 // Swap Errors
-export enum SwapErrorTypes {
+export enum SwapErrorType {
   ALLOWANCE_REQUIRED_FAILED = 'ALLOWANCE_REQUIRED_FAILED',
   APPROVE_INFINITE_FAILED = 'APPROVE_INFINITE_FAILED',
   APPROVE_AMOUNT_FAILED = 'APPROVE_AMOUNT_FAILED',

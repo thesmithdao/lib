@@ -1,22 +1,17 @@
 import { Asset } from '@shapeshiftoss/asset-service'
 import { fromAssetId } from '@shapeshiftoss/caip'
+import { EvmChainAdapter, EvmChainId } from '@shapeshiftoss/chain-adapters'
 import { HDWallet } from '@shapeshiftoss/hdwallet-core'
 import Web3 from 'web3'
 import { AbiItem, numberToHex } from 'web3-utils'
 
-import {
-  EvmSupportedChainAdapter,
-  EvmSupportedChainIds,
-  SwapError,
-  SwapErrorTypes,
-  TradeQuote,
-} from '../../../api'
+import { SwapError, SwapErrorType, TradeQuote } from '../../../api'
 import { MAX_ALLOWANCE } from '../../cow/utils/constants'
 import { erc20Abi as erc20AbiImported } from '../abi/erc20-abi'
 import { BN, bn, bnOrZero } from '../bignumber'
 
 export type IsApprovalRequiredArgs = {
-  adapter: EvmSupportedChainAdapter
+  adapter: EvmChainAdapter
   receiveAddress: string
   allowanceContract: string
   sellAsset: Asset
@@ -39,10 +34,10 @@ export type GetApproveContractDataArgs = {
   contractAddress: string
 }
 
-type GrantAllowanceArgs<T extends EvmSupportedChainIds> = {
+type GrantAllowanceArgs<T extends EvmChainId> = {
   quote: TradeQuote<T>
   wallet: HDWallet
-  adapter: EvmSupportedChainAdapter
+  adapter: EvmChainAdapter
   erc20Abi: AbiItem[]
   web3: Web3
 }
@@ -87,7 +82,7 @@ export const isApprovalRequired = async ({
     if (!allowanceOnChain) {
       throw new SwapError(`[isApprovalRequired] - No allowance data`, {
         details: { allowanceContract, receiveAddress },
-        code: SwapErrorTypes.RESPONSE_ERROR,
+        code: SwapErrorType.RESPONSE_ERROR,
       })
     }
 
@@ -99,12 +94,12 @@ export const isApprovalRequired = async ({
     if (e instanceof SwapError) throw e
     throw new SwapError('[isApprovalRequired]', {
       cause: e,
-      code: SwapErrorTypes.ALLOWANCE_REQUIRED_FAILED,
+      code: SwapErrorType.ALLOWANCE_REQUIRED_FAILED,
     })
   }
 }
 
-export const grantAllowance = async <T extends EvmSupportedChainIds>({
+export const grantAllowance = async <T extends EvmChainId>({
   quote,
   wallet,
   adapter,
@@ -119,12 +114,12 @@ export const grantAllowance = async <T extends EvmSupportedChainIds>({
       .approve(quote.allowanceContract, quote.sellAmountBeforeFeesCryptoBaseUnit)
       .encodeABI()
 
-    const { bip44Params } = quote
+    const { accountNumber } = quote
 
     const { txToSign } = await adapter.buildSendTransaction({
       wallet,
       to: sellAssetErc20Address,
-      bip44Params,
+      accountNumber,
       value: '0',
       chainSpecific: {
         erc20ContractAddress: sellAssetErc20Address,
@@ -152,14 +147,14 @@ export const grantAllowance = async <T extends EvmSupportedChainIds>({
       return broadcastedTxId
     } else {
       throw new SwapError('[grantAllowance] - invalid HDWallet config', {
-        code: SwapErrorTypes.SIGN_AND_BROADCAST_FAILED,
+        code: SwapErrorType.SIGN_AND_BROADCAST_FAILED,
       })
     }
   } catch (e) {
     if (e instanceof SwapError) throw e
     throw new SwapError('[grantAllowance]', {
       cause: e,
-      code: SwapErrorTypes.GRANT_ALLOWANCE_FAILED,
+      code: SwapErrorType.GRANT_ALLOWANCE_FAILED,
     })
   }
 }

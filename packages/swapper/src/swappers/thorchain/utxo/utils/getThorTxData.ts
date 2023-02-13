@@ -1,12 +1,12 @@
 import { Asset } from '@shapeshiftoss/asset-service'
 
-import { SwapError, SwapErrorTypes } from '../../../../../api'
-import type { ThorchainSwapperDeps } from '../../../types'
-import { getInboundAddressDataForChain } from '../../getInboundAddressDataForChain'
-import { getLimit } from '../../getLimit/getLimit'
-import { makeSwapMemo } from '../../makeSwapMemo/makeSwapMemo'
+import { SwapError, SwapErrorType } from '../../../../api'
+import type { ThorchainSwapperDeps } from '../../types'
+import { getInboundAddressDataForChain } from '../../utils/getInboundAddressDataForChain'
+import { getLimit } from '../../utils/getLimit/getLimit'
+import { makeSwapMemo } from '../../utils/makeSwapMemo/makeSwapMemo'
 
-type GetBtcThorTxInfoArgs = {
+type GetThorTxInfoArgs = {
   deps: ThorchainSwapperDeps
   sellAsset: Asset
   buyAsset: Asset
@@ -16,14 +16,14 @@ type GetBtcThorTxInfoArgs = {
   xpub: string
   buyAssetTradeFeeUsd: string
 }
-type GetBtcThorTxInfoReturn = Promise<{
+type GetThorTxInfoReturn = Promise<{
   opReturnData: string
   vault: string
   pubkey: string
 }>
-type GetBtcThorTxInfo = (args: GetBtcThorTxInfoArgs) => GetBtcThorTxInfoReturn
+type GetThorTxInfo = (args: GetThorTxInfoArgs) => GetThorTxInfoReturn
 
-export const getThorTxInfo: GetBtcThorTxInfo = async ({
+export const getThorTxInfo: GetThorTxInfo = async ({
   deps,
   sellAsset,
   buyAsset,
@@ -34,12 +34,16 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
   buyAssetTradeFeeUsd,
 }) => {
   try {
-    const inboundAddress = await getInboundAddressDataForChain(deps.daemonUrl, sellAsset.assetId)
+    const inboundAddress = await getInboundAddressDataForChain(
+      deps.daemonUrl,
+      sellAsset.assetId,
+      false,
+    )
     const vault = inboundAddress?.address
 
     if (!vault)
       throw new SwapError(`[getThorTxInfo]: vault not found for asset`, {
-        code: SwapErrorTypes.RESPONSE_ERROR,
+        code: SwapErrorType.RESPONSE_ERROR,
         details: { inboundAddress, sellAsset },
       })
 
@@ -65,6 +69,6 @@ export const getThorTxInfo: GetBtcThorTxInfo = async ({
     }
   } catch (e) {
     if (e instanceof SwapError) throw e
-    throw new SwapError('[getThorTxInfo]', { cause: e, code: SwapErrorTypes.TRADE_QUOTE_FAILED })
+    throw new SwapError('[getThorTxInfo]', { cause: e, code: SwapErrorType.TRADE_QUOTE_FAILED })
   }
 }

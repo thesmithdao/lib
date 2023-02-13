@@ -1,4 +1,4 @@
-import { BIP44Params } from '@shapeshiftoss/types'
+import { AssetId } from '@shapeshiftoss/caip'
 import * as unchained from '@shapeshiftoss/unchained-client'
 
 import * as types from '../types'
@@ -11,6 +11,7 @@ export type Account = {
   redelegations: Redelegation[]
   undelegations: Undelegation[]
   rewards: ValidatorReward[]
+  assets: CosmosSDKToken[]
 }
 
 export type Message = {
@@ -25,7 +26,7 @@ export type ValidatorAction = {
 
 export type BuildTransactionInput<T extends CosmosSdkChainId> = {
   account: types.Account<T>
-  bip44Params: BIP44Params
+  accountNumber: number
   msg: Message
   memo?: string
 } & types.ChainSpecificBuildTxData<T>
@@ -89,7 +90,7 @@ export type FeeData = {
 }
 
 export type CosmosSDKToken = {
-  denom: string
+  assetId: AssetId
   amount: string
 }
 

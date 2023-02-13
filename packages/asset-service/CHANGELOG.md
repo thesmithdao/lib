@@ -1,3 +1,52 @@
+# [@shapeshiftoss/asset-service-v8.8.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v8.7.0...@shapeshiftoss/asset-service-v8.8.0) (2023-02-02)
+
+
+### Features
+
+* **asset-service:** regenerate asset data ([#1188](https://github.com/shapeshift/lib/issues/1188)) ([15c0b08](https://github.com/shapeshift/lib/commit/15c0b088866d4b689bd20ebc324e5cdaa1eb048d))
+
+# [@shapeshiftoss/asset-service-v8.7.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v8.6.3...@shapeshiftoss/asset-service-v8.7.0) (2023-01-23)
+
+
+### Features
+
+* **chain-adapters:** return token balances from cosmossdk getaccount method ([#1176](https://github.com/shapeshift/lib/issues/1176)) ([45ac971](https://github.com/shapeshift/lib/commit/45ac9715a4b9cfbd16fca899704bac6d70c2e530))
+
+# [@shapeshiftoss/asset-service-v8.6.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v8.6.2...@shapeshiftoss/asset-service-v8.6.3) (2023-01-23)
+
+
+### Bug Fixes
+
+* **asset-service:** use recommended githack url format for osmosis urls ([#1172](https://github.com/shapeshift/lib/issues/1172)) ([8ba4a6d](https://github.com/shapeshift/lib/commit/8ba4a6de2c962ba6dd0a745e4ba18eac85fd4c10))
+
+# [@shapeshiftoss/asset-service-v8.6.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v8.6.1...@shapeshiftoss/asset-service-v8.6.2) (2023-01-22)
+
+
+### Bug Fixes
+
+* **asset-service:** generate osmosis lp asset data ([#1171](https://github.com/shapeshift/lib/issues/1171)) ([edcca33](https://github.com/shapeshift/lib/commit/edcca33a8e0d33e057353fa7e1df1bb3bd63595e))
+
+# [@shapeshiftoss/asset-service-v8.6.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v8.6.0...@shapeshiftoss/asset-service-v8.6.1) (2023-01-19)
+
+
+### Bug Fixes
+
+* **asset-service:** update viewblock url ([#1169](https://github.com/shapeshift/lib/issues/1169)) ([f93c918](https://github.com/shapeshift/lib/commit/f93c918f8fdc77243279aae6b47431588ecafcfe))
+
+# [@shapeshiftoss/asset-service-v8.6.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v8.5.0...@shapeshiftoss/asset-service-v8.6.0) (2023-01-13)
+
+
+### Features
+
+* add optimism ([#1157](https://github.com/shapeshift/lib/issues/1157)) ([177725d](https://github.com/shapeshift/lib/commit/177725dc04c00ba982bbebe8e84a7edcff395367))
+
+# [@shapeshiftoss/asset-service-v8.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v8.4.2...@shapeshiftoss/asset-service-v8.5.0) (2023-01-04)
+
+
+### Features
+
+* **asset-service:** add osmosis lp tokens ([#1141](https://github.com/shapeshift/lib/issues/1141)) ([9df69ab](https://github.com/shapeshift/lib/commit/9df69abdcf402abc31dd6390fd1fdb1d0662bf04))
+
 # [@shapeshiftoss/asset-service-v8.4.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v8.4.1...@shapeshiftoss/asset-service-v8.4.2) (2022-12-30)
 
 # [@shapeshiftoss/asset-service-v8.4.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/asset-service-v8.4.0...@shapeshiftoss/asset-service-v8.4.1) (2022-12-20)

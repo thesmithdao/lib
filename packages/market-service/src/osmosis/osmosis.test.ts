@@ -14,14 +14,20 @@ import {
 jest.mock('axios')
 
 const mockedAxios = axios as jest.Mocked<typeof axios>
-const osmosisMarketService = new OsmosisMarketService()
+const osmosisMarketService = new OsmosisMarketService({
+  jsonRpcProviderUrl: '',
+  unchainedEthereumHttpUrl: '',
+  unchainedEthereumWsUrl: '',
+  osmosisMarketDataUrl: 'https://api-osmosis.imperator.co/',
+  osmosisPoolMetadataUrl: 'https://daemon.osmosis.shapeshift.com',
+})
 
 describe('osmosis market service', () => {
   describe('findAll', () => {
     it('should sort by market cap', async () => {
       mockedAxios.get.mockResolvedValueOnce({ data: [secretNetwork, ion, osmo] })
       const result = await osmosisMarketService.findAll()
-      expect(Object.keys(result)[0]).toEqual(adapters.osmosisToAssetId(osmo.denom))
+      expect(Object.keys(result)[0]).toEqual(adapters.osmosisToAssetId(osmo.symbol))
     })
 
     it('should handle api errors', async () => {

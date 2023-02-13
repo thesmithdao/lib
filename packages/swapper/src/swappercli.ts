@@ -1,5 +1,5 @@
-import { AssetService } from '@shapeshiftoss/asset-service'
-import { CHAIN_NAMESPACE, ethChainId, fromAssetId } from '@shapeshiftoss/caip'
+import { Asset, AssetService } from '@shapeshiftoss/asset-service'
+import { CHAIN_NAMESPACE, ethAssetId, ethChainId, fromAssetId } from '@shapeshiftoss/caip'
 import { bitcoin, ethereum, UtxoBaseAdapter, UtxoChainId } from '@shapeshiftoss/chain-adapters'
 import { NativeAdapterArgs, NativeHDWallet } from '@shapeshiftoss/hdwallet-native'
 import { UtxoAccountType } from '@shapeshiftoss/types'
@@ -8,11 +8,11 @@ import dotenv from 'dotenv'
 import readline from 'readline-sync'
 import Web3 from 'web3'
 
-import { UtxoSupportedChainIds } from '.'
 import { getAdapterManager } from './adapters'
 import { SwapperManager } from './manager'
 import { ThorchainSwapper, ThorchainSwapperDeps, ZrxSwapper } from './swappers'
 import { fromBaseUnit } from './swappers/utils/bignumber'
+import { setupQuote } from './swappers/utils/test-data/setupSwapQuote'
 
 dotenv.config()
 
@@ -112,10 +112,26 @@ const main = async (): Promise<void> => {
   await tc.initialize()
   swapManager.addSwapper(tc)
 
-  const swapper = await swapManager.getBestSwapper({
-    sellAssetId: sellAsset.assetId,
-    buyAssetId: buyAsset.assetId,
+  const ethereumAsset: Asset = {
+    assetId: ethAssetId,
+    chainId: ethChainId,
+    symbol: 'ETH',
+    name: 'Ethereum',
+    precision: 18,
+    color: '#5C6BC0',
+    icon: 'https://assets.coincap.io/assets/icons/256/eth.png',
+    explorer: 'https://etherscan.io',
+    explorerAddressLink: 'https://etherscan.io/address/',
+    explorerTxLink: 'https://etherscan.io/tx/',
+  }
+
+  const { quoteInput } = setupQuote()
+  const swappersWithQuoteMetadata = await swapManager.getSwappersWithQuoteMetadata({
+    ...quoteInput,
+    feeAsset: ethereumAsset,
   })
+
+  const swapper = swappersWithQuoteMetadata[0].swapper
 
   console.info(`using swapper ${swapper?.getType()}`)
   if (!swapper) {
@@ -132,8 +148,9 @@ const main = async (): Promise<void> => {
     utxoAccountType = bitcoin.ChainAdapter.defaultUtxoAccountType
   }
 
+  const accountNumber = 0
   const bip44Params = sellAdapter.getBIP44Params({
-    accountNumber: 0,
+    accountNumber,
     accountType: utxoAccountType,
   })
   if (!bip44Params) {
@@ -153,7 +170,7 @@ const main = async (): Promise<void> => {
     }
     publicKey = await (sellAdapter as unknown as UtxoBaseAdapter<UtxoChainId>).getPublicKey(
       wallet,
-      bip44Params,
+      accountNumber,
       utxoAccountType,
     )
   }
@@ -164,19 +181,19 @@ const main = async (): Promise<void> => {
   const buyAssetReceiveAddr = await buyAdapter.getAddress({
     wallet,
     accountType: utxoAccountType,
-    bip44Params,
+    accountNumber,
   })
   console.info(`${buyAsset.name} using receive addr ${buyAssetReceiveAddr}`)
   let quote
   try {
     quote = await swapper.getTradeQuote({
-      chainId: sellAsset.chainId as UtxoSupportedChainIds,
+      chainId: sellAsset.chainId as UtxoChainId,
       sellAsset,
       buyAsset,
       sellAmountBeforeFeesCryptoBaseUnit,
       sendMax: false,
       accountType: utxoAccountType || bitcoin.ChainAdapter.defaultUtxoAccountType,
-      bip44Params,
+      accountNumber,
       xpub: publicKey?.xpub || '',
       receiveAddress: buyAssetReceiveAddr,
     })
@@ -209,7 +226,7 @@ const main = async (): Promise<void> => {
       sellAsset,
       receiveAddress: buyAssetReceiveAddr,
       accountType: utxoAccountType || bitcoin.ChainAdapter.defaultUtxoAccountType,
-      bip44Params,
+      accountNumber,
       xpub: publicKey?.xpub || '',
     })
 

@@ -1,14 +1,15 @@
 import { UtxoBaseAdapter } from '@shapeshiftoss/chain-adapters'
 import { KnownChainIds } from '@shapeshiftoss/types'
 
-import { QuoteFeeData, SwapError, SwapErrorTypes, UtxoSupportedChainIds } from '../../../../../api'
+import { QuoteFeeData, SwapError, SwapErrorType } from '../../../../../api'
 import { bn } from '../../../../utils/bignumber'
+import { ThorUtxoSupportedChainId } from '../../../ThorchainSwapper'
 
 type GetUtxoTxFeesInput = {
   opReturnData: string
   vault: string
   sellAmountCryptoBaseUnit: string
-  sellAdapter: UtxoBaseAdapter<UtxoSupportedChainIds>
+  sellAdapter: UtxoBaseAdapter<ThorUtxoSupportedChainId>
   pubkey: string
   buyAssetTradeFeeUsd: string
   sendMax: boolean
@@ -22,7 +23,7 @@ export const getUtxoTxFees = async ({
   pubkey,
   buyAssetTradeFeeUsd,
   sendMax,
-}: GetUtxoTxFeesInput): Promise<QuoteFeeData<UtxoSupportedChainIds>> => {
+}: GetUtxoTxFeesInput): Promise<QuoteFeeData<ThorUtxoSupportedChainId>> => {
   try {
     const feeDataOptions = await sellAdapter.getFeeData({
       to: vault,
@@ -58,6 +59,6 @@ export const getUtxoTxFees = async ({
     }
   } catch (e) {
     if (e instanceof SwapError) throw e
-    throw new SwapError('[getUtxoTxFees]', { cause: e, code: SwapErrorTypes.TRADE_QUOTE_FAILED })
+    throw new SwapError('[getUtxoTxFees]', { cause: e, code: SwapErrorType.TRADE_QUOTE_FAILED })
   }
 }

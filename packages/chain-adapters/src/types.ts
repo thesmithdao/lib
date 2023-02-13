@@ -7,18 +7,21 @@ import {
   OsmosisSignTx,
   ThorchainSignTx,
 } from '@shapeshiftoss/hdwallet-core'
-import { BIP44Params, ChainSpecific, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
+import { ChainSpecific, KnownChainIds, UtxoAccountType } from '@shapeshiftoss/types'
 import * as unchained from '@shapeshiftoss/unchained-client'
 
 import * as cosmossdk from './cosmossdk/types'
 import * as evm from './evm/types'
 import * as utxo from './utxo/types'
 
+export { cosmossdk, evm, utxo }
+
 type ChainSpecificAccount<T> = ChainSpecific<
   T,
   {
     [KnownChainIds.EthereumMainnet]: evm.Account
     [KnownChainIds.AvalancheMainnet]: evm.Account
+    [KnownChainIds.OptimismMainnet]: evm.Account
     [KnownChainIds.BitcoinMainnet]: utxo.Account
     [KnownChainIds.BitcoinCashMainnet]: utxo.Account
     [KnownChainIds.DogecoinMainnet]: utxo.Account
@@ -53,6 +56,7 @@ type ChainSpecificFeeData<T> = ChainSpecific<
   {
     [KnownChainIds.EthereumMainnet]: evm.FeeData
     [KnownChainIds.AvalancheMainnet]: evm.FeeData
+    [KnownChainIds.OptimismMainnet]: evm.FeeData
     [KnownChainIds.BitcoinMainnet]: utxo.FeeData
     [KnownChainIds.BitcoinCashMainnet]: utxo.FeeData
     [KnownChainIds.DogecoinMainnet]: utxo.FeeData
@@ -67,14 +71,6 @@ export type FeeData<T extends ChainId> = {
   txFee: string
 } & ChainSpecificFeeData<T>
 
-export type GasFeeData = Omit<evm.FeeData, 'gasLimit'>
-
-export type GasFeeDataEstimate = {
-  [FeeDataKey.Fast]: GasFeeData
-  [FeeDataKey.Average]: GasFeeData
-  [FeeDataKey.Slow]: GasFeeData
-}
-
 export type FeeDataEstimate<T extends ChainId> = {
   [FeeDataKey.Slow]: FeeData<T>
   [FeeDataKey.Average]: FeeData<T>
@@ -83,13 +79,15 @@ export type FeeDataEstimate<T extends ChainId> = {
 
 export type SubscribeTxsInput = {
   wallet: HDWallet
-  bip44Params: BIP44Params
+  accountNumber: number
   accountType?: UtxoAccountType
 }
 
 export type GetBIP44ParamsInput = {
   accountNumber: number
   accountType?: UtxoAccountType
+  index?: number
+  isChange?: boolean
 }
 
 export type TransferType = unchained.TransferType
@@ -119,6 +117,7 @@ export type TxHistoryResponse = {
 type ChainSignTx = {
   [KnownChainIds.EthereumMainnet]: ETHSignTx
   [KnownChainIds.AvalancheMainnet]: ETHSignTx
+  [KnownChainIds.OptimismMainnet]: ETHSignTx
   [KnownChainIds.BitcoinMainnet]: BTCSignTx
   [KnownChainIds.BitcoinCashMainnet]: BTCSignTx
   [KnownChainIds.DogecoinMainnet]: BTCSignTx
@@ -134,7 +133,7 @@ export type BuildSendTxInput<T extends ChainId> = {
   to: string
   value: string
   wallet: HDWallet
-  bip44Params: BIP44Params
+  accountNumber: number
   sendMax?: boolean
   memo?: string
 } & ChainSpecificBuildTxData<T>
@@ -144,6 +143,7 @@ export type ChainSpecificBuildTxData<T> = ChainSpecific<
   {
     [KnownChainIds.EthereumMainnet]: evm.BuildTxInput
     [KnownChainIds.AvalancheMainnet]: evm.BuildTxInput
+    [KnownChainIds.OptimismMainnet]: evm.BuildTxInput
     [KnownChainIds.BitcoinMainnet]: utxo.BuildTxInput
     [KnownChainIds.BitcoinCashMainnet]: utxo.BuildTxInput
     [KnownChainIds.DogecoinMainnet]: utxo.BuildTxInput
@@ -179,11 +179,11 @@ type BuildLPTxInput<T extends ChainId> = Omit<BuildSendTxInput<T>, 'to' | 'value
 }
 
 export type BuildLPAddTxInput<T extends ChainId> = BuildLPTxInput<T> & {
-  tokenInMaxs: [cosmossdk.CosmosSDKToken, cosmossdk.CosmosSDKToken]
+  tokenInMaxs: [{ denom: string; amount: string }, { denom: string; amount: string }]
 }
 
 export type BuildLPRemoveTxInput<T extends ChainId> = BuildLPTxInput<T> & {
-  tokenOutMins: [cosmossdk.CosmosSDKToken, cosmossdk.CosmosSDKToken]
+  tokenOutMins: [{ denom: string; amount: string }, { denom: string; amount: string }]
 }
 
 export type SignTxInput<TxType> = {
@@ -204,7 +204,9 @@ export interface TxHistoryInput {
 
 export type GetAddressInputBase = {
   wallet: HDWallet
-  bip44Params: BIP44Params
+  accountNumber: number
+  isChange?: boolean
+  index?: number
   /**
    * Request that the address be shown to the user by the device, if supported
    */
@@ -218,6 +220,7 @@ type ChainSpecificGetFeeDataInput<T> = ChainSpecific<
   {
     [KnownChainIds.EthereumMainnet]: evm.GetFeeDataInput
     [KnownChainIds.AvalancheMainnet]: evm.GetFeeDataInput
+    [KnownChainIds.OptimismMainnet]: evm.GetFeeDataInput
     [KnownChainIds.BitcoinMainnet]: utxo.GetFeeDataInput
     [KnownChainIds.BitcoinCashMainnet]: utxo.GetFeeDataInput
     [KnownChainIds.DogecoinMainnet]: utxo.GetFeeDataInput
@@ -225,6 +228,9 @@ type ChainSpecificGetFeeDataInput<T> = ChainSpecific<
   }
 >
 export type GetFeeDataInput<T extends ChainId> = {
+  // Optional hex-encoded calldata for EVM chains, UTF-8 for others
+  // NOT to be used with ERC20s since this will be used in-place of the ERC20 calldata
+  memo?: string
   to: string
   value: string
   sendMax?: boolean
@@ -269,6 +275,7 @@ export enum ChainAdapterDisplayName {
   Osmosis = 'Osmosis',
   Ethereum = 'Ethereum',
   Avalanche = 'Avalanche C-Chain',
+  Optimism = 'Optimism',
   Cosmos = 'Cosmos',
   Bitcoin = 'Bitcoin',
   BitcoinCash = 'Bitcoin Cash',

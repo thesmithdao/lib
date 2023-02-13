@@ -1,14 +1,15 @@
 import { numberToHex } from 'web3-utils'
 
-import { EvmSupportedChainIds, SwapError, SwapErrorTypes, TradeResult } from '../../../api'
+import { SwapError, SwapErrorType, TradeResult } from '../../../api'
 import { ZrxExecuteTradeInput, ZrxSwapperDeps } from '../types'
 import { isNativeEvmAsset } from '../utils/helpers/helpers'
+import { ZrxSupportedChainId } from '../ZrxSwapper'
 
-export async function zrxExecuteTrade<T extends EvmSupportedChainIds>(
+export async function zrxExecuteTrade<T extends ZrxSupportedChainId>(
   { adapter }: ZrxSwapperDeps,
   { trade, wallet }: ZrxExecuteTradeInput<T>,
 ): Promise<TradeResult> {
-  const { bip44Params, sellAsset } = trade
+  const { accountNumber, sellAsset } = trade
 
   try {
     // value is 0 for erc20s
@@ -24,7 +25,7 @@ export async function zrxExecuteTrade<T extends EvmSupportedChainIds>(
         gasPrice: numberToHex(trade.feeData?.chainSpecific?.gasPriceCryptoBaseUnit || 0),
         gasLimit: numberToHex(trade.feeData?.chainSpecific?.estimatedGas || 0),
       },
-      bip44Params,
+      accountNumber,
     })
 
     const { txToSign } = buildTxResponse
@@ -46,14 +47,14 @@ export async function zrxExecuteTrade<T extends EvmSupportedChainIds>(
       return { tradeId: txid }
     } else {
       throw new SwapError('[zrxExecuteTrade]', {
-        code: SwapErrorTypes.SIGN_AND_BROADCAST_FAILED,
+        code: SwapErrorType.SIGN_AND_BROADCAST_FAILED,
       })
     }
   } catch (e) {
     if (e instanceof SwapError) throw e
     throw new SwapError('[zrxExecuteTrade]', {
       cause: e,
-      code: SwapErrorTypes.EXECUTE_TRADE_FAILED,
+      code: SwapErrorType.EXECUTE_TRADE_FAILED,
     })
   }
 }

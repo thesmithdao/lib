@@ -1,3 +1,17 @@
+# [@shapeshiftoss/types-v8.5.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v8.4.0...@shapeshiftoss/types-v8.5.0) (2023-01-13)
+
+
+### Features
+
+* add optimism ([#1157](https://github.com/shapeshift/lib/issues/1157)) ([177725d](https://github.com/shapeshift/lib/commit/177725dc04c00ba982bbebe8e84a7edcff395367))
+
+# [@shapeshiftoss/types-v8.4.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v8.3.3...@shapeshiftoss/types-v8.4.0) (2023-01-12)
+
+
+### Features
+
+* **types:** export all utility types ([#1163](https://github.com/shapeshift/lib/issues/1163)) ([166d3c5](https://github.com/shapeshift/lib/commit/166d3c59f4919035a4f241a939ff7441ecce77ad))
+
 # [@shapeshiftoss/types-v8.3.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/types-v8.3.2...@shapeshiftoss/types-v8.3.3) (2022-12-22)
 
 

@@ -88,7 +88,8 @@ describe('EthereumChainAdapter', () => {
       overrideArgs,
     )
 
-  const makeEstimateGasMockedResponse = (overrideArgs?: string) => overrideArgs ?? '21000'
+  const makeEstimateGasMockedResponse = (overrideArgs?: { gasLimit?: string }) =>
+    merge({ gasLimit: '21000' }, overrideArgs)
 
   const makeGetAccountMockResponse = (balance: {
     balance: string
@@ -110,7 +111,7 @@ describe('EthereumChainAdapter', () => {
   const makeChainAdapterArgs = (overrideArgs?: {
     providers?: { http: unchained.ethereum.V1Api }
     chainId?: EvmChainId
-  }): ChainAdapterArgs =>
+  }): ChainAdapterArgs<unchained.ethereum.V1Api> =>
     merge(
       {
         providers: {
@@ -233,12 +234,12 @@ describe('EthereumChainAdapter', () => {
 
   describe('getAddress', () => {
     const adapter = new ethereum.ChainAdapter(makeChainAdapterArgs())
-    const bip44Params = adapter.getBIP44Params({ accountNumber: 0 })
     const fn = jest.fn()
 
     it('should return a valid address', async () => {
       const wallet = await getWallet()
-      const res = await adapter.getAddress({ bip44Params, wallet })
+      const accountNumber = 0
+      const res = await adapter.getAddress({ accountNumber, wallet })
 
       expect(res).toEqual('0x3f2329C9ADFbcCd9A84f52c906E936A42dA18CB8')
     })
@@ -247,7 +248,8 @@ describe('EthereumChainAdapter', () => {
       const wallet = await getWallet()
       wallet.ethGetAddress = fn.mockResolvedValue('0x3f2329C9ADFbcCd9A84f52c906E936A42dA18CB8')
 
-      await adapter.getAddress({ bip44Params, wallet })
+      const accountNumber = 0
+      await adapter.getAddress({ accountNumber, wallet })
 
       expect(wallet.ethGetAddress).toHaveBeenCalledWith({
         addressNList: [2147483692, 2147483708, 2147483648, 0, 0],
@@ -481,8 +483,10 @@ describe('EthereumChainAdapter', () => {
 
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
       const adapter = new ethereum.ChainAdapter(args)
+      const accountNumber = 0
 
       const tx = {
+        accountNumber,
         wallet: await getWallet(),
         to: ENS_NAME,
         value,
@@ -517,8 +521,10 @@ describe('EthereumChainAdapter', () => {
 
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
       const adapter = new ethereum.ChainAdapter(args)
+      const accountNumber = 0
 
       const tx = {
+        accountNumber,
         wallet: await getWallet(),
         to: EOA_ADDRESS,
         value,
@@ -550,8 +556,10 @@ describe('EthereumChainAdapter', () => {
 
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
       const adapter = new ethereum.ChainAdapter(args)
+      const accountNumber = 0
 
       const tx = {
+        accountNumber,
         wallet: await getWallet(),
         to: EOA_ADDRESS,
         value,
@@ -575,8 +583,10 @@ describe('EthereumChainAdapter', () => {
 
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
       const adapter = new ethereum.ChainAdapter(args)
+      const accountNumber = 0
 
       const tx = {
+        accountNumber,
         wallet: await getWallet(),
         to: EOA_ADDRESS,
         value,
@@ -611,8 +621,10 @@ describe('EthereumChainAdapter', () => {
 
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
       const adapter = new ethereum.ChainAdapter(args)
+      const accountNumber = 0
 
       const tx = {
+        accountNumber,
         wallet: await getWallet(),
         to: ZERO_ADDRESS,
         value,
@@ -646,8 +658,10 @@ describe('EthereumChainAdapter', () => {
 
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
       const adapter = new ethereum.ChainAdapter(args)
+      const accountNumber = 0
 
       const tx = {
+        accountNumber,
         wallet: await getWallet(),
         to: EOA_ADDRESS,
         value,
@@ -682,8 +696,10 @@ describe('EthereumChainAdapter', () => {
 
       const args = makeChainAdapterArgs({ providers: { http: httpProvider } })
       const adapter = new ethereum.ChainAdapter(args)
+      const accountNumber = 0
 
       const tx = {
+        accountNumber,
         wallet: await getWallet(),
         to: EOA_ADDRESS,
         value,
@@ -712,7 +728,7 @@ describe('EthereumChainAdapter', () => {
 
       const txArgs = {
         wallet: await getWallet(),
-        bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
+        accountNumber: 0,
         to: `0x47CB53752e5dc0A972440dA127DCA9FBA6C2Ab6F`,
         data: '0x420',
         value: '123',
@@ -752,7 +768,7 @@ describe('EthereumChainAdapter', () => {
 
       const txArgs = {
         wallet: await getWallet(),
-        bip44Params: { purpose: 44, coinType: 60, accountNumber: 0 },
+        accountNumber: 0,
         to: `0x47CB53752e5dc0A972440dA127DCA9FBA6C2Ab6F`,
         data: '0x420',
         value: '123',
