@@ -1,6 +1,6 @@
 {
   "name": "@shapeshiftoss/chain-adapters",
-  "version": "11.0.0",
+  "version": "11.1.4",
   "description": "> TODO: description",
   "homepage": "",
   "license": "MIT",
@@ -29,7 +29,7 @@
   "dependencies": {
     "axios": "^0.26.1",
     "bech32": "^2.0.0",
-    "bignumber.js": "^9.0.2",
+    "bignumber.js": "^9.1.1",
     "bitcoinjs-lib": "^5.2.0",
     "coinselect": "^3.1.13",
     "ethers": "^5.4.7",
@@ -38,16 +38,16 @@
   },
   "peerDependencies": {
     "@shapeshiftoss/caip": "^8.0.0",
-    "@shapeshiftoss/hdwallet-core": "^1.42.0",
-    "@shapeshiftoss/hdwallet-native": "^1.42.0",
+    "@shapeshiftoss/hdwallet-core": "^1.46.0",
+    "@shapeshiftoss/hdwallet-native": "^1.46.0",
     "@shapeshiftoss/types": "^8.1.0",
     "@shapeshiftoss/unchained-client": "^10.11.0",
     "bs58check": "^2.0.2"
   },
   "devDependencies": {
     "@shapeshiftoss/caip": "^8.0.0",
-    "@shapeshiftoss/hdwallet-core": "^1.42.0",
-    "@shapeshiftoss/hdwallet-native": "^1.42.0",
+    "@shapeshiftoss/hdwallet-core": "^1.46.0",
+    "@shapeshiftoss/hdwallet-native": "^1.46.0",
     "@shapeshiftoss/types": "^8.1.0",
     "@shapeshiftoss/unchained-client": "^10.0.1",
     "@types/bs58check": "^2.1.0",

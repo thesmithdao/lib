@@ -1,3 +1,33 @@
+# [@shapeshiftoss/chain-adapters-v11.1.4](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v11.1.3...@shapeshiftoss/chain-adapters-v11.1.4) (2023-03-03)
+
+
+### Bug Fixes
+
+* **common:** osmosis keepkey swaps ([#1221](https://github.com/shapeshift/lib/issues/1221)) ([156f2ac](https://github.com/shapeshift/lib/commit/156f2acf815fe05a74fdfbe7238f813936f2a2b9))
+
+# [@shapeshiftoss/chain-adapters-v11.1.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v11.1.2...@shapeshiftoss/chain-adapters-v11.1.3) (2023-02-24)
+
+# [@shapeshiftoss/chain-adapters-v11.1.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v11.1.1...@shapeshiftoss/chain-adapters-v11.1.2) (2023-02-24)
+
+
+### Bug Fixes
+
+* **chain-adapters:** field name in osmosis lp remove transaction ([#1214](https://github.com/shapeshift/lib/issues/1214)) ([6b32018](https://github.com/shapeshift/lib/commit/6b32018aed52b4bf6f4b92b716fb13f80d56bd83))
+
+# [@shapeshiftoss/chain-adapters-v11.1.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v11.1.0...@shapeshiftoss/chain-adapters-v11.1.1) (2023-02-23)
+
+
+### Bug Fixes
+
+* **chain-adapters:** use snake_case for all osmosis tx fields ([#1205](https://github.com/shapeshift/lib/issues/1205)) ([957569a](https://github.com/shapeshift/lib/commit/957569a5e3460ae56a40d6d8337398504f741a8f))
+
+# [@shapeshiftoss/chain-adapters-v11.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v11.0.0...@shapeshiftoss/chain-adapters-v11.1.0) (2023-02-17)
+
+
+### Features
+
+* **chain-adapters:** add osmosis token send support ([#1201](https://github.com/shapeshift/lib/issues/1201)) ([c57e6f4](https://github.com/shapeshift/lib/commit/c57e6f4c2fce191e31a491db837b77f05287d6c3))
+
 # [@shapeshiftoss/chain-adapters-v11.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/chain-adapters-v10.14.0...@shapeshiftoss/chain-adapters-v11.0.0) (2023-02-08)
 
 

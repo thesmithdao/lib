@@ -1,3 +1,31 @@
+# [@shapeshiftoss/investor-foxy-v8.0.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v8.0.0...@shapeshiftoss/investor-foxy-v8.0.1) (2023-03-03)
+
+
+### Bug Fixes
+
+* **common:** osmosis keepkey swaps ([#1221](https://github.com/shapeshift/lib/issues/1221)) ([156f2ac](https://github.com/shapeshift/lib/commit/156f2acf815fe05a74fdfbe7238f813936f2a2b9))
+
+# [@shapeshiftoss/investor-foxy-v8.0.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v7.1.3...@shapeshiftoss/investor-foxy-v8.0.0) (2023-02-28)
+
+
+### Features
+
+* **investor-foxy:** rename Token_Staking provider to Staking ([#1218](https://github.com/shapeshift/lib/issues/1218)) ([d17ffe5](https://github.com/shapeshift/lib/commit/d17ffe582a5f6c27043079cca0e13d63703c22f4))
+
+
+### BREAKING CHANGES
+
+* **investor-foxy:** rename DefiType.TokenStaking to DefiType.Staking
+
+# [@shapeshiftoss/investor-foxy-v7.1.3](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v7.1.2...@shapeshiftoss/investor-foxy-v7.1.3) (2023-02-24)
+
+# [@shapeshiftoss/investor-foxy-v7.1.2](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v7.1.1...@shapeshiftoss/investor-foxy-v7.1.2) (2023-02-23)
+
+
+### Bug Fixes
+
+* **chain-adapters:** use snake_case for all osmosis tx fields ([#1205](https://github.com/shapeshift/lib/issues/1205)) ([957569a](https://github.com/shapeshift/lib/commit/957569a5e3460ae56a40d6d8337398504f741a8f))
+
 # [@shapeshiftoss/investor-foxy-v7.1.1](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v7.1.0...@shapeshiftoss/investor-foxy-v7.1.1) (2023-02-11)
 
 # [@shapeshiftoss/investor-foxy-v7.1.0](https://github.com/shapeshift/lib/compare/@shapeshiftoss/investor-foxy-v7.0.4...@shapeshiftoss/investor-foxy-v7.1.0) (2023-01-13)
